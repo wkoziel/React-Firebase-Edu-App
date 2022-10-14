@@ -1,7 +1,8 @@
 const paths = {
-   login: '/login',
-   register: '/register',
-   teacherDashboard: '/teacher/dashboard',
-};
+  login: '/login',
+  register: '/register',
+  profileCreation: '/profile-creation',
+  teacherDashboard: '/teacher/dashboard',
+}
 
-export default paths;
+export default paths
