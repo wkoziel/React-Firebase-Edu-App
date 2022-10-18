@@ -1,17 +1,19 @@
-import { createContext, useContext, useState } from 'react'
-import { User, UserSignIn } from '../Types/Users'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { UserProfile, UserSignIn } from '../Types/Users'
 import { AuthMessage } from '../Types/Others'
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../Database/firebaseConfig'
 import { useNavigate } from 'react-router-dom'
 import paths from '../Routes/paths'
+import { getUser } from '../Database/Users'
 
 interface UserContextInterface {
-  user: User | null
+  userID: string | null
   authMessage: AuthMessage | null
   isAuth: boolean
   signInUser: (userData: UserSignIn) => void
   createUser: (userData: UserSignIn) => void
+  createUserProfile: (userData: UserProfile) => void
 }
 
 const UserContext = createContext<UserContextInterface | undefined>(undefined)
@@ -26,18 +28,15 @@ export const useUserContext = (): UserContextInterface => {
 }
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
+  const [userID, setUserID] = useState<string | null>(null)
   const [authMessage, setAuthMessage] = useState<AuthMessage | null>(null)
-  const isAuth = !!user
+  const isAuth = !!userID
   const navigate = useNavigate()
 
   const signInUser = (userData: UserSignIn) => {
     const { email, password } = userData
     signInWithEmailAndPassword(auth, email, password)
-      .then((response) => {
-        setUser({ id: response.user.uid }) // FIXME:
-        navigate(paths.profileCreation)
-      })
+      .then((response) => {})
       .catch((error) => {
         setAuthMessage({
           type: 'error',
@@ -62,19 +61,38 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
   }
 
-  // onAuthStateChanged(auth, (user) => {
-  //   if (user) {
-  //     const uid = user.uid
-  //     console.log('Użytkownik zalogowany')
-  //   }
-  // })
+  const createUserProfile = () => {}
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUserID(firebaseUser.uid)
+        // navigate(paths.profileCreation)
+      } else {
+        setUserID(null)
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      // @ts-ignore
+      const _user = await getUser(userID)
+
+      if (_user) {
+      } //Sprawdź role i przekieruj na dashboard
+      else navigate(paths.profileCreation)
+    }
+    if (userID) loadUserData()
+  }, [userID])
 
   const value: UserContextInterface = {
-    user,
+    userID,
     authMessage,
     isAuth,
     signInUser,
     createUser,
+    createUserProfile,
   }
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>

@@ -12,6 +12,8 @@ import MenuItem from '@mui/material/MenuItem'
 import { Menu } from '@mui/material'
 import { useState } from 'react'
 import { useUserContext } from '../../Context/userContext'
+import { useLocation } from 'react-router-dom'
+import paths from '../../Routes/paths'
 
 const pages = ['Products', 'Pricing', 'Blog']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
@@ -19,7 +21,7 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 const Navbar = () => {
   const { isAuth } = useUserContext()
   const [anchorElUser, setAnchorElUser] = useState(null)
-
+  const location = useLocation()
   const handleOpenUserMenu = (event: any) => {
     setAnchorElUser(event.currentTarget)
   }
@@ -28,7 +30,13 @@ const Navbar = () => {
     setAnchorElUser(null)
   }
 
-  if (!isAuth) return null
+  if (
+    !isAuth ||
+    location.pathname === paths.login ||
+    location.pathname === paths.register ||
+    location.pathname === paths.profileCreation
+  )
+    return null
 
   return (
     <AppBar position='static'>

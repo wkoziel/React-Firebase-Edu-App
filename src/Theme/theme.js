@@ -12,6 +12,10 @@ const theme = createTheme({
       dark: '#7B1FA2;',
       light: '#BA68C8',
     },
+    text: {
+      primary: '#000000',
+      secondary: 'rgba(0, 0, 0, 0.54)',
+    },
     error: {
       main: '#D32F2F',
       dark: '#C62828',
@@ -29,6 +33,15 @@ const theme = createTheme({
       defaultProps: {
         variant: 'outlined',
         fullWidth: true,
+      },
+    },
+
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#fff',
+          padding: '0 2rem',
+        },
       },
     },
   },

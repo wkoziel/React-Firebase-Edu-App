@@ -15,10 +15,16 @@ export type User = {
 
 export type PostUser = {}
 
-export type UserProfileForm = {
+export type UserProfile = {
   firstName: string
   lastName: string
   bio: string
   birthday: Date | string
+  gender: 'female' | 'male' | 'other'
   role: 'student' | 'teacher' | 'admin'
+  address: string
+  city: string
+  postCode: string
+  phone: string
+  email: string
 }

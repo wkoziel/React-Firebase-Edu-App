@@ -1,7 +1,8 @@
 import { collections } from '../Consts/collections'
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore'
+import { addDoc, collection, query, where } from 'firebase/firestore'
 import { User } from '../Types/Users'
 import { database } from './firebaseConfig'
+import { readQueryData } from './helpers'
 
 const userCollection = collection(database, collections.users)
 
@@ -11,8 +12,8 @@ export const postUser = (user: User) => {
     .catch((error) => alert('error.message'))
 }
 
-export const getUser = async (email: string) => {
-  const user = query(userCollection, where('email', '==', email))
-  if (user) return user
-  return null
+export const getUser = async (id: string) => {
+  const q = query(userCollection, where('id', '==', id))
+  const userData = await readQueryData(q)
+  return userData
 }
