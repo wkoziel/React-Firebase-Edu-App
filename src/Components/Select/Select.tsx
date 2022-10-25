@@ -1,5 +1,5 @@
 import React from 'react'
-import { Select as MuiSelect, SelectProps, Box, FormHelperText } from '@mui/material'
+import { Select as MuiSelect, SelectProps, InputLabel, FormHelperText, FormControl } from '@mui/material'
 import MenuItem from '@mui/material/MenuItem'
 
 type Props = SelectProps & {
@@ -8,15 +8,29 @@ type Props = SelectProps & {
 
 const Select = ({ options = [], ...props }: Props) => {
   return (
-    <Box>
-      <MuiSelect {...props}>
-        {options.map((option: any) => (
-          <MenuItem value={option.value}>{option.name}</MenuItem>
+    <FormControl sx={{ width: '100%' }}>
+      <InputLabel id='test-select-label'>{props.label}</InputLabel>
+      <MuiSelect {...props} fullWidth labelId='test-select-label'>
+        {options.map((option: any, index) => (
+          <MenuItem value={option.value} key={index}>
+            {option.name}
+          </MenuItem>
         ))}
       </MuiSelect>
       {props.error && <FormHelperText>{props.error}</FormHelperText>}
-    </Box>
+    </FormControl>
   )
 }
+
+// <Box>
+//   <MuiSelect {...props}>
+//     {options.map((option: any, index) => (
+//       <MenuItem value={option.value} key={index}>
+//         {option.name}
+//       </MenuItem>
+//     ))}
+//   </MuiSelect>
+//   {props.error && <FormHelperText>{props.error}</FormHelperText>}
+// </Box>
 
 export default Select

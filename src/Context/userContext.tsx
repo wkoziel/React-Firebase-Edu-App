@@ -50,7 +50,12 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { email, password } = userData
     createUserWithEmailAndPassword(auth, email, password)
       .then((response) => {
-        signInUser(userData)
+        setAuthMessage({
+          type: 'success',
+          title: 'Konto zostało utworzone!',
+          message: 'Możesz się zalogować',
+        })
+        navigate(paths.login)
       })
       .catch((error) => {
         setAuthMessage({
@@ -78,10 +83,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const loadUserData = async () => {
       // @ts-ignore
       const _user = await getUser(userID)
+      console.log('_user', _user)
 
-      if (_user) {
-      } //Sprawdź role i przekieruj na dashboard
-      else navigate(paths.profileCreation)
+      if (_user.length) {
+        console.log('dupa')
+      } else navigate(paths.profileCreation)
     }
     if (userID) loadUserData()
   }, [userID])

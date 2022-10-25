@@ -19,7 +19,6 @@ const Login = () => {
   const { handleSubmit, control } = useForm<UserSignIn>({ mode: 'onSubmit' })
 
   const onSubmit = (data: UserSignIn) => {
-    console.log(data)
     const { email, password } = data
     if (email && password) signInUser({ email, password })
   }

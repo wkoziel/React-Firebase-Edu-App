@@ -21,6 +21,7 @@ const theme = createTheme({
       dark: '#C62828',
       light: '#EF5350',
     },
+    grey: {},
   },
   components: {
     MuiButton: {

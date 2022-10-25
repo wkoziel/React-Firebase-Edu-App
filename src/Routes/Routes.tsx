@@ -5,7 +5,7 @@ import paths from './paths'
 
 const Login = lazy(() => import('../Pages/Login'))
 const Register = lazy(() => import('../Pages/Register'))
-const ProfileCreation = lazy(() => import('../Pages/ProfileCreation'))
+const ProfileCreation = lazy(() => import('../Pages/ProfileCreation/ProfileCreation'))
 
 // Teacher
 const TeacherDashboard = lazy(() => import('../Pages/Teacher/Dashboard'))
