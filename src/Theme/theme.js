@@ -35,6 +35,7 @@ const theme = createTheme({
         variant: 'outlined',
         fullWidth: true,
       },
+      // TODO: Set input red on error
     },
 
     MuiContainer: {
