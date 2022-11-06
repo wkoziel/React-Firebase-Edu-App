@@ -12,22 +12,40 @@ import MenuItem from '@mui/material/MenuItem'
 import { Menu } from '@mui/material'
 import { useState } from 'react'
 import { useUserContext } from '../../Context/userContext'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import paths from '../../Routes/paths'
 
-const pages = ['Products', 'Pricing', 'Blog']
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
+const pagesTeacher = [{ name: 'Strona główna', route: paths.teacherDashboard }]
+const pagesStudent = [{ name: 'Strona główna', route: '/' }]
+
+const settingsTeacher = [
+  { name: 'Profil', route: paths.teacherDashboard },
+  { name: 'Wyloguj', route: paths.logout },
+]
+
+const settingsStudent = [
+  { name: 'Profil', route: paths.teacherDashboard },
+  { name: 'Wyloguj', route: paths.logout },
+]
 
 const Navbar = () => {
-  const { isAuth } = useUserContext()
+  const { isAuth, userRole, user } = useUserContext()
   const [anchorElUser, setAnchorElUser] = useState(null)
   const location = useLocation()
+  const navigate = useNavigate()
+
   const handleOpenUserMenu = (event: any) => {
     setAnchorElUser(event.currentTarget)
   }
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
+  }
+
+  const getLogoUrl = () => {
+    if (userRole === 'teacher') return paths.teacherDashboard
+    if (userRole === 'student') return paths.login //FIXME: Change to student dashboard
+    return paths.login
   }
 
   if (
@@ -38,15 +56,18 @@ const Navbar = () => {
   )
     return null
 
+  const pages = userRole === 'teacher' ? pagesTeacher : pagesStudent
+  const settings = userRole === 'teacher' ? settingsTeacher : settingsStudent
+
   return (
-    <AppBar position='static'>
-      <Container>
+    <AppBar position='fixed'>
+      <Container sx={{ backgroundColor: 'primary.main' }}>
         <Toolbar disableGutters>
           <Typography
             variant='h6'
             noWrap
             component='a'
-            href='/'
+            href={getLogoUrl()}
             sx={{
               mr: 2,
               display: 'flex',
@@ -62,16 +83,23 @@ const Navbar = () => {
 
           <Box sx={{ flexGrow: 1, display: 'flex' }}>
             {pages.map((page) => (
-              <Button key={page} sx={{ my: 2, mx: 1, color: 'white', display: 'block' }} variant='text'>
-                {page}
+              <Button
+                key={page.name}
+                onClick={() => navigate(page.route)}
+                sx={{ my: 2, mx: 1, color: 'white', display: 'block' }}
+                variant='text'
+              >
+                {page.name}
               </Button>
             ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title='Open settings'>
+            <Tooltip title='Otwórz menu'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+                <Avatar
+                  alt={`${user?.firstName} ${user?.lastName}`}
+                >{`${user?.firstName[0].toUpperCase()}${user?.lastName[0].toUpperCase()}`}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu
@@ -91,8 +119,15 @@ const Navbar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
+                <MenuItem
+                  key={setting.name}
+                  onClick={() => {
+                    handleCloseUserMenu()
+                    navigate(setting.route)
+                  }}
+                  sx={{ minWidth: '200px' }}
+                >
+                  <Typography textAlign='center'>{setting.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>

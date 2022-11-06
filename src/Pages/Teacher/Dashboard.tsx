@@ -1,12 +1,8 @@
-import React from 'react';
-import Navbar from '../../Components/Navbar/Navbar';
+import React from 'react'
+import { Container } from '@mui/material'
 
 const Dashboard = () => {
-   return (
-      <>
-         <Navbar />
-      </>
-   );
-};
+  return <Container>Dashboard</Container>
+}
 
-export default Dashboard;
+export default Dashboard

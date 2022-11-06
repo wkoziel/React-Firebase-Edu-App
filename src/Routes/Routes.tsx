@@ -1,6 +1,7 @@
 import React, { lazy } from 'react'
-import { BrowserRouter as Router, Routes as Switch, Route, Navigate } from 'react-router-dom'
+import { Routes as Switch, Route, Navigate } from 'react-router-dom'
 import Navbar from '../Components/Navbar/Navbar'
+import Logout from '../Pages/Logout'
 import paths from './paths'
 
 const Login = lazy(() => import('../Pages/Login'))
@@ -16,15 +17,15 @@ const Routes = () => {
       <Navbar />
 
       <Switch>
+        {/* COMMON */}
         <Route path='/' element={<Navigate to={paths.login} replace />} />
         <Route path={paths.login} element={<Login />} />
         <Route path={paths.register} element={<Register />} />
         <Route path={paths.profileCreation} element={<ProfileCreation />} />
+        <Route path={paths.logout} element={<Logout />} />
 
-        {/* <Route
-               path={paths.teacherDashboard}
-               element={<TeacherDashboard />}
-              /> */}
+        {/* TEACHER */}
+        <Route path={paths.teacherDashboard} element={<TeacherDashboard />} />
       </Switch>
     </>
   )

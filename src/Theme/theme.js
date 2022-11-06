@@ -41,10 +41,12 @@ const theme = createTheme({
     MuiContainer: {
       styleOverrides: {
         root: {
-          backgroundColor: '#fff',
           padding: '0 2rem',
         },
       },
+    },
+    MuiTooltip: {
+      styleOverrides: {},
     },
   },
 })

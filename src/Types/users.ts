@@ -16,6 +16,7 @@ export type User = {
 export type PostUser = {}
 
 export type UserProfile = {
+  userId: string
   firstName: string
   lastName: string
   bio: string
@@ -28,3 +29,5 @@ export type UserProfile = {
   phone: string
   email: string
 }
+
+export type UserRole = 'student' | 'teacher' | 'admin'

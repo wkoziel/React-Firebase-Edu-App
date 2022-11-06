@@ -117,7 +117,14 @@ const Step2 = ({ setUpperStep, setLowerStep }: Props) => {
           control={control}
           name='email'
           defaultValue=''
-          rules={{ required: 'To pole jest wymagane' }}
+          rules={{
+            required: 'To pole jest wymagane',
+            pattern: {
+              value:
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              message: 'Adres email nie jest poprawny',
+            },
+          }}
           render={({ field, fieldState: { error } }) => (
             <TextField {...field} label='Adres email' error={!!error} helperText={error?.message} />
           )}
@@ -126,7 +133,7 @@ const Step2 = ({ setUpperStep, setLowerStep }: Props) => {
 
       <Grid item xs={12} sx={{ marginTop: '2rem' }}>
         <Typography variant='caption' fontWeight='700' color='text.secondary'>
-          Adres
+          Adres odbywania korepetycji
         </Typography>
       </Grid>
 

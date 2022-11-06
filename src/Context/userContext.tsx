@@ -1,19 +1,26 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { UserProfile, UserSignIn } from '../Types/Users'
+import { User, UserProfile, UserRole, UserSignIn } from '../Types/Users'
 import { AuthMessage } from '../Types/Others'
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../Database/firebaseConfig'
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { auth, database } from '../Database/firebaseConfig'
 import { useNavigate } from 'react-router-dom'
 import paths from '../Routes/paths'
-import { getUser } from '../Database/Users'
+import { addDoc, collection, getDocs, onSnapshot, query, where, doc, getDoc, setDoc } from 'firebase/firestore'
+import { getDatabase, ref, child, get, set } from 'firebase/database'
+import { useModalContext } from './modalContext'
 
+const userCollection = collection(database, 'users')
 interface UserContextInterface {
-  userID: string | null
+  userID: string
+  user: UserProfile | null
   authMessage: AuthMessage | null
   isAuth: boolean
+  userRole: UserRole | null
   signInUser: (userData: UserSignIn) => void
   createUser: (userData: UserSignIn) => void
   createUserProfile: (userData: UserProfile) => void
+  getUserProfile: (id: string) => any
+  logoutUser: () => void
 }
 
 const UserContext = createContext<UserContextInterface | undefined>(undefined)
@@ -28,10 +35,42 @@ export const useUserContext = (): UserContextInterface => {
 }
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [userID, setUserID] = useState<string | null>(null)
+  const [userID, setUserID] = useState<string>('')
   const [authMessage, setAuthMessage] = useState<AuthMessage | null>(null)
+  const [userRole, setUserRole] = useState<UserRole | null>(null)
+  const [user, setUser] = useState<UserProfile | null>(null)
+
   const isAuth = !!userID
   const navigate = useNavigate()
+  const { openModal } = useModalContext()
+
+  useEffect(() => {
+    onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        const _userId = firebaseUser.uid
+
+        setUserID(_userId)
+
+        const docRef = doc(database, `users/${_userId}`)
+        const docSnap = await getDoc(docRef)
+
+        if (docSnap.exists()) {
+          setUser(docSnap.data()?.user)
+          const _userRole = docSnap.data()?.user?.role
+          if (_userRole === 'teacher') {
+            navigate(paths.teacherDashboard)
+            setUserRole('teacher')
+          }
+          if (_userRole === 'student') {
+            alert('Dashboard ucznia')
+            setUserRole('student')
+          }
+        } else {
+          navigate(paths.profileCreation)
+        }
+      }
+    })
+  }, [])
 
   const signInUser = (userData: UserSignIn) => {
     const { email, password } = userData
@@ -66,39 +105,38 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
   }
 
-  const createUserProfile = () => {}
+  const logoutUser = async () => {
+    await signOut(auth)
+    navigate(paths.login)
+  }
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser) {
-        setUserID(firebaseUser.uid)
-        // navigate(paths.profileCreation)
-      } else {
-        setUserID(null)
-      }
+  const createUserProfile = async (user: UserProfile) => {
+    setDoc(doc(userCollection, userID), {
+      user,
     })
-  }, [])
+      .then(() => {
+        openModal('Sukces', 'Użytkownik został dodany', 'Potwierdź')
+        if (user.role === 'teacher') navigate(paths.teacherDashboard)
+        if (user.role === 'student') alert('Dashboard ucznia')
+      })
+      .catch((error) => {
+        openModal('Nie udało się', 'Użytkownik został dodany', 'Potwierdź')
+      })
+  }
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      // @ts-ignore
-      const _user = await getUser(userID)
-      console.log('_user', _user)
-
-      if (_user.length) {
-        console.log('dupa')
-      } else navigate(paths.profileCreation)
-    }
-    if (userID) loadUserData()
-  }, [userID])
+  const getUserProfile = async (id: string) => {}
 
   const value: UserContextInterface = {
     userID,
+    user,
     authMessage,
     isAuth,
+    userRole,
     signInUser,
     createUser,
     createUserProfile,
+    getUserProfile,
+    logoutUser,
   }
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>
