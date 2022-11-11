@@ -1,21 +1,26 @@
-import React, { lazy } from 'react'
+import React, { lazy, Suspense } from 'react'
 import { Routes as Switch, Route, Navigate } from 'react-router-dom'
 import Navbar from '../Components/Navbar/Navbar'
 import Logout from '../Pages/Logout'
 import paths from './paths'
 
+// Common
 const Login = lazy(() => import('../Pages/Login'))
 const Register = lazy(() => import('../Pages/Register'))
 const ProfileCreation = lazy(() => import('../Pages/ProfileCreation/ProfileCreation'))
 
 // Teacher
 const TeacherDashboard = lazy(() => import('../Pages/Teacher/Dashboard'))
+const TeacherAddAppointment = lazy(() => import('../Pages/Teacher/AddAppointment'))
+
+// Student
+const StudentDashboard = lazy(() => import('../Pages/Student/Dashboard'))
 
 const Routes = () => {
   return (
     <>
+      <Suspense fallback={<div />}></Suspense>
       <Navbar />
-
       <Switch>
         {/* COMMON */}
         <Route path='/' element={<Navigate to={paths.login} replace />} />
@@ -26,6 +31,10 @@ const Routes = () => {
 
         {/* TEACHER */}
         <Route path={paths.teacherDashboard} element={<TeacherDashboard />} />
+        <Route path={paths.teacherAddAppointment} element={<TeacherAddAppointment />} />
+
+        {/* Student */}
+        <Route path={paths.studentDashboard} element={<StudentDashboard />} />
       </Switch>
     </>
   )

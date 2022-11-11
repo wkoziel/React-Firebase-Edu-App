@@ -15,7 +15,10 @@ import { useUserContext } from '../../Context/userContext'
 import { useLocation, useNavigate } from 'react-router-dom'
 import paths from '../../Routes/paths'
 
-const pagesTeacher = [{ name: 'Strona główna', route: paths.teacherDashboard }]
+const pagesTeacher = [
+  { name: 'Strona główna', route: paths.teacherDashboard },
+  { name: 'Dodaj termin', route: paths.teacherAddAppointment },
+]
 const pagesStudent = [{ name: 'Strona główna', route: '/' }]
 
 const settingsTeacher = [
@@ -60,7 +63,7 @@ const Navbar = () => {
   const settings = userRole === 'teacher' ? settingsTeacher : settingsStudent
 
   return (
-    <AppBar position='fixed'>
+    <AppBar position='static'>
       <Container sx={{ backgroundColor: 'primary.main' }}>
         <Toolbar disableGutters>
           <Typography
@@ -97,9 +100,9 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Otwórz menu'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar
-                  alt={`${user?.firstName} ${user?.lastName}`}
-                >{`${user?.firstName[0].toUpperCase()}${user?.lastName[0].toUpperCase()}`}</Avatar>
+                <Avatar alt={`${user?.firstName} ${user?.lastName}`}>{`${user?.firstName[0].toUpperCase() || 'N'}${
+                  user?.lastName[0].toUpperCase() || 'A'
+                }`}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu

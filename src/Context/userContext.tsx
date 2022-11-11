@@ -1,12 +1,11 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { User, UserProfile, UserRole, UserSignIn } from '../Types/Users'
+import { UserProfile, UserRole, UserSignIn } from '../Types/Users'
 import { AuthMessage } from '../Types/Others'
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { auth, database } from '../Database/firebaseConfig'
 import { useNavigate } from 'react-router-dom'
 import paths from '../Routes/paths'
-import { addDoc, collection, getDocs, onSnapshot, query, where, doc, getDoc, setDoc } from 'firebase/firestore'
-import { getDatabase, ref, child, get, set } from 'firebase/database'
+import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import { useModalContext } from './modalContext'
 
 const userCollection = collection(database, 'users')
@@ -62,7 +61,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUserRole('teacher')
           }
           if (_userRole === 'student') {
-            alert('Dashboard ucznia')
+            navigate(paths.studentDashboard)
             setUserRole('student')
           }
         } else {
@@ -117,7 +116,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       .then(() => {
         openModal('Sukces', 'Użytkownik został dodany', 'Potwierdź')
         if (user.role === 'teacher') navigate(paths.teacherDashboard)
-        if (user.role === 'student') alert('Dashboard ucznia')
+        if (user.role === 'student') navigate(paths.studentDashboard)
       })
       .catch((error) => {
         openModal('Nie udało się', 'Użytkownik został dodany', 'Potwierdź')

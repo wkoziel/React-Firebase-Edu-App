@@ -3,7 +3,7 @@ import { DatePicker } from '@mui/x-date-pickers'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import Select from '../../../Components/Select/Select'
-import { genderOptions } from '../../../Consts/selectOptions'
+import { citiesOptions, genderOptions } from '../../../Consts/selectOptions'
 
 type Props = {
   setLowerStep: () => void
@@ -13,7 +13,7 @@ type Props = {
 const Step2 = ({ setUpperStep, setLowerStep }: Props) => {
   const { control } = useFormContext()
 
-  //TODO: Apply better fields validation
+  //FIXME: TODO: Apply better fields validation
 
   return (
     <Grid container spacing={2} sx={{ margin: '0 auto', padding: '0 2rem' }}>
@@ -116,7 +116,7 @@ const Step2 = ({ setUpperStep, setLowerStep }: Props) => {
         <Controller
           control={control}
           name='email'
-          defaultValue=''
+          defaultValue='' //FIXME: Download from firebase
           rules={{
             required: 'To pole jest wymagane',
             pattern: {
@@ -153,10 +153,18 @@ const Step2 = ({ setUpperStep, setLowerStep }: Props) => {
         <Controller
           control={control}
           name='city'
-          defaultValue=''
+          defaultValue={''}
           rules={{ required: 'To pole jest wymagane' }}
-          render={({ field, fieldState: { error } }) => (
-            <TextField {...field} label='Miasto' error={!!error} helperText={error?.message} />
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <Select
+              onChange={onChange}
+              value={value}
+              label='Miasto'
+              error={!!error}
+              helperText={error?.message}
+              fullWidth
+              options={citiesOptions}
+            />
           )}
         />
       </Grid>

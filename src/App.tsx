@@ -10,18 +10,19 @@ import { ModalProvider } from './Context/modalContext'
 
 function App() {
   return (
-    <Router>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <ThemeProvider theme={theme}>
-          <ModalProvider>
-            <UserProvider>
-              <Suspense fallback={<div />}></Suspense>
-              <Routes />
-            </UserProvider>
-          </ModalProvider>
-        </ThemeProvider>
-      </LocalizationProvider>
-    </Router>
+    <>
+      <Router>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <ThemeProvider theme={theme}>
+            <ModalProvider>
+              <UserProvider>
+                <Routes />
+              </UserProvider>
+            </ModalProvider>
+          </ThemeProvider>
+        </LocalizationProvider>
+      </Router>
+    </>
   )
 }
 
