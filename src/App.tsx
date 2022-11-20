@@ -1,12 +1,13 @@
 import { ThemeProvider } from '@mui/material'
 import Routes from './Routes/Routes'
 import theme from './Theme/theme'
-import React, { Suspense } from 'react'
+import React from 'react'
 import { UserProvider } from './Context/userContext'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { ModalProvider } from './Context/modalContext'
+import { AppointmentProvider } from './Context/appointmentContext'
 
 function App() {
   return (
@@ -16,7 +17,9 @@ function App() {
           <ThemeProvider theme={theme}>
             <ModalProvider>
               <UserProvider>
-                <Routes />
+                <AppointmentProvider>
+                  <Routes />
+                </AppointmentProvider>
               </UserProvider>
             </ModalProvider>
           </ThemeProvider>

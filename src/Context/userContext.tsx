@@ -7,8 +7,9 @@ import { useNavigate } from 'react-router-dom'
 import paths from '../Routes/paths'
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import { useModalContext } from './modalContext'
+import { collections } from '../Consts/collections'
 
-const userCollection = collection(database, 'users')
+const userCollection = collection(database, collections.users)
 interface UserContextInterface {
   userID: string
   user: UserProfile | null
@@ -50,7 +51,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         setUserID(_userId)
 
-        const docRef = doc(database, `users/${_userId}`)
+        const docRef = doc(database, `${collections.users}/${_userId}`)
         const docSnap = await getDoc(docRef)
 
         if (docSnap.exists()) {
@@ -119,7 +120,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (user.role === 'student') navigate(paths.studentDashboard)
       })
       .catch((error) => {
-        openModal('Nie udało się', 'Użytkownik został dodany', 'Potwierdź')
+        openModal('Nie udało się', 'Użytkownik nie został dodany', 'Powrót')
       })
   }
 

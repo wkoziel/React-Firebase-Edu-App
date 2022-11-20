@@ -5,7 +5,7 @@ const theme = createTheme({
     primary: {
       main: '#1976D2',
       dark: '#1565C0',
-      light: '#1565C0',
+      light: '#64b5f6',
     },
     secondary: {
       main: '#9C27B0',
@@ -21,7 +21,6 @@ const theme = createTheme({
       dark: '#C62828',
       light: '#EF5350',
     },
-    grey: {},
   },
   components: {
     MuiButton: {

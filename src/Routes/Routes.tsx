@@ -19,23 +19,24 @@ const StudentDashboard = lazy(() => import('../Pages/Student/Dashboard'))
 const Routes = () => {
   return (
     <>
-      <Suspense fallback={<div />}></Suspense>
-      <Navbar />
-      <Switch>
-        {/* COMMON */}
-        <Route path='/' element={<Navigate to={paths.login} replace />} />
-        <Route path={paths.login} element={<Login />} />
-        <Route path={paths.register} element={<Register />} />
-        <Route path={paths.profileCreation} element={<ProfileCreation />} />
-        <Route path={paths.logout} element={<Logout />} />
+      <Suspense fallback={<div />}>
+        <Navbar />
+        <Switch>
+          {/* COMMON */}
+          <Route path='/' element={<Navigate to={paths.login} replace />} />
+          <Route path={paths.login} element={<Login />} />
+          <Route path={paths.register} element={<Register />} />
+          <Route path={paths.profileCreation} element={<ProfileCreation />} />
+          <Route path={paths.logout} element={<Logout />} />
 
-        {/* TEACHER */}
-        <Route path={paths.teacherDashboard} element={<TeacherDashboard />} />
-        <Route path={paths.teacherAddAppointment} element={<TeacherAddAppointment />} />
+          {/* TEACHER */}
+          <Route path={paths.teacherDashboard} element={<TeacherDashboard />} />
+          <Route path={paths.teacherAddAppointment} element={<TeacherAddAppointment />} />
 
-        {/* Student */}
-        <Route path={paths.studentDashboard} element={<StudentDashboard />} />
-      </Switch>
+          {/* Student */}
+          <Route path={paths.studentDashboard} element={<StudentDashboard />} />
+        </Switch>
+      </Suspense>
     </>
   )
 }

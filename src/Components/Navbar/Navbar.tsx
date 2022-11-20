@@ -13,23 +13,22 @@ import { Menu } from '@mui/material'
 import { useState } from 'react'
 import { useUserContext } from '../../Context/userContext'
 import { useLocation, useNavigate } from 'react-router-dom'
+
 import paths from '../../Routes/paths'
 
 const pagesTeacher = [
   { name: 'Strona główna', route: paths.teacherDashboard },
-  { name: 'Dodaj termin', route: paths.teacherAddAppointment },
-]
-const pagesStudent = [{ name: 'Strona główna', route: '/' }]
-
-const settingsTeacher = [
+  { name: 'Zarządzaj terminami', route: paths.teacherAddAppointment },
   { name: 'Profil', route: paths.teacherDashboard },
-  { name: 'Wyloguj', route: paths.logout },
+]
+const pagesStudent = [
+  { name: 'Strona główna', route: '/' },
+  { name: 'Profil', route: paths.teacherDashboard },
 ]
 
-const settingsStudent = [
-  { name: 'Profil', route: paths.teacherDashboard },
-  { name: 'Wyloguj', route: paths.logout },
-]
+const settingsTeacher = [{ name: 'Wyloguj', route: paths.logout }]
+
+const settingsStudent = [{ name: 'Wyloguj', route: paths.logout }]
 
 const Navbar = () => {
   const { isAuth, userRole, user } = useUserContext()
@@ -116,7 +115,7 @@ const Navbar = () => {
               keepMounted
               transformOrigin={{
                 vertical: 'top',
-                horizontal: 'right',
+                horizontal: 'center',
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
