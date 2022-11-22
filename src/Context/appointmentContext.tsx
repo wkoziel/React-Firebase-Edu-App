@@ -1,4 +1,15 @@
-import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore'
+import {
+  addDoc,
+  collection,
+  doc,
+  DocumentData,
+  DocumentSnapshot,
+  getDoc,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from 'firebase/firestore'
 import { createContext, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { collections } from '../Consts/collections'
@@ -13,7 +24,7 @@ const appointmentsCollection = collection(database, collections.appointments)
 interface AppointmentContextInterface {
   getAllAppointments: () => any
   addAppointment: (data: any) => Promise<void>
-  getAppointment: (id: string) => void
+  getAppointment: (id: string) => Promise<DocumentSnapshot<DocumentData>>
   getAppointments: (id: string) => any
 }
 
@@ -29,52 +40,44 @@ export const useAppointmentContext = (): AppointmentContextInterface => {
 }
 
 export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { userID } = useUserContext()
   const { openModal } = useModalContext()
   const navigate = useNavigate()
+  const { userID } = useUserContext()
 
   const getAllAppointments = () => {
     return appointmentsCollection
   }
 
   const getAppointments = async (id: string) => {
-    console.log(`${collections.appointments}/${id}`)
     const docRef = doc(database, `${collections.appointments}/${id}`)
     const docSnap = await getDoc(docRef)
-    console.log(docSnap.data())
     if (docSnap.exists()) return docSnap.data().appointments
     else return null
   }
 
-  const getAppointment = async (id: string) => {
-    const docRef = doc(database, `${collections.appointments}/${id}`)
-    const docSnap = await getDoc(docRef)
-    if (docSnap.exists()) return docSnap.data().appointments
-    else return null
-  }
+  const getAppointment = async (id: string) => getDoc(doc(database, collections.appointments, id))
+
+  // const result: Appointment[] = []
+  // const q = query(appointmentsCollection, where('teacherId', '==', id))
+  // onSnapshot(q, (data) => data.docs.forEach((item) => result.push(item.data() as Appointment)))
+  // return result
+
+  // const docRef = doc(database, `${collections.appointments}/${id}`)
+  // const docSnap = await getDoc(docRef)
+  // if (docSnap.exists()) return docSnap.data().appointments
+  // else return null
 
   const addAppointment = async (data: Appointment) =>
-    addDoc(appointmentsCollection, data)
+    setDoc(doc(appointmentsCollection, userID), {
+      data,
+    })
       .then(() => {
         navigate(paths.teacherDashboard)
+        openModal('Sukces!', 'Terminy zostały pomyślnie zaktualizowane.', 'Powrót')
       })
       .catch((error) => {
-        openModal('Nie udało się', 'Przedmiot nie został dodany', 'Powrót')
+        openModal('Nie udało się', 'Terminy nie został dodany. \n Spróbuj ponownie', 'Powrót')
       })
-
-  // const docRef = doc(database, `${collections.appointments}`, userID)
-  // const docSnap = await getDoc(docRef)
-
-  // setDoc(
-  //   doc(appointmentsCollection, userID),
-  //   docSnap.exists() ? { appointments: [...docSnap.data().appointments, ...[data]] } : { appointments: [data] },
-  // )
-  //   .then(() => {
-  //     navigate(paths.teacherDashboard)
-  //   })
-  //   .catch((error) => {
-  //     openModal('Nie udało się', 'Przedmiot nie został dodany', 'Powrót')
-  //   })
 
   const value: AppointmentContextInterface = { getAllAppointments, addAppointment, getAppointment, getAppointments }
 

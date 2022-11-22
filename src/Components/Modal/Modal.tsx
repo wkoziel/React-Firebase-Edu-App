@@ -11,7 +11,6 @@ type Props = {
 }
 
 const Modal = ({ open, title, text, buttonText, onClose }: Props) => {
-  console.log('Modal')
   return (
     <Dialog open={open} PaperProps={{ sx: { width: '40rem', minHeight: '20rem', borderRadius: 5, padding: '2rem' } }}>
       <IconButton

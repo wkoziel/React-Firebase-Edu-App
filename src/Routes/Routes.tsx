@@ -16,6 +16,7 @@ const TeacherProfile = lazy(() => import('../Pages/Teacher/Profile'))
 
 // Student
 const StudentDashboard = lazy(() => import('../Pages/Student/Dashboard'))
+const StudentProfile = lazy(() => import('../Pages/Student/Profile'))
 
 const Routes = () => {
   return (
@@ -37,6 +38,7 @@ const Routes = () => {
 
           {/* Student */}
           <Route path={paths.studentDashboard} element={<StudentDashboard />} />
+          <Route path={paths.studentProfile} element={<StudentProfile />} />
         </Switch>
       </Suspense>
     </>

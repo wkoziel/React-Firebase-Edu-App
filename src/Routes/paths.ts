@@ -11,6 +11,7 @@ const paths = {
 
   // STUDENT
   studentDashboard: '/student/dashboard',
+  studentProfile: '/student/profile',
 }
 
 export default paths

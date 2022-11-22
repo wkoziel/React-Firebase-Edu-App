@@ -22,8 +22,8 @@ const pagesTeacher = [
   { name: 'Profil', route: paths.teacherProfile },
 ]
 const pagesStudent = [
-  { name: 'Strona główna', route: '/' },
-  { name: 'Profil', route: paths.teacherDashboard },
+  { name: 'Strona główna', route: paths.studentDashboard },
+  { name: 'Profil', route: paths.studentProfile },
 ]
 
 const settingsTeacher = [{ name: 'Wyloguj', route: paths.logout }]
@@ -46,7 +46,7 @@ const Navbar = () => {
 
   const getLogoUrl = () => {
     if (userRole === 'teacher') return paths.teacherDashboard
-    if (userRole === 'student') return paths.login //FIXME: Change to student dashboard
+    if (userRole === 'student') return paths.studentDashboard
     return paths.login
   }
 
