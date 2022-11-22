@@ -38,40 +38,37 @@ const TeacherCard = ({ appointment }: Props) => {
           xs={8}
           sx={{ display: 'flex', flexDirection: 'column', gap: '5px', borderRadius: '12px', padding: '10px' }}
         >
-          {dates.map((date, index) => {
-            const displayDate = date.date
-            return (
-              <Grid container key={index}>
-                <Grid
-                  component={'button'}
-                  item
-                  xs={4}
-                  sx={{
-                    width: '100%',
-                    opacity: 0.9,
-                    bgcolor: 'primary.light',
-                    padding: '5px',
-                    borderRadius: '5px',
-                    cursor: 'pointer',
-                    border: 'none',
-                    '&:hover': {
-                      bgcolor: 'primary.main',
-                      transition: '.3s ease',
-                    },
-                    '&:disable': {
-                      bgcolor: 'primary.lighter',
-                      opacity: 0.8,
-                    },
-                  }}
-                >
-                  <Typography variant='body1' fontWeight={'700'} textAlign='center'>
-                    {/* @ts-ignore */}
-                    {format(displayDate.toDate(), 'MM/dd/yyyy HH:mm')}
-                  </Typography>
-                </Grid>
+          {dates.map((date, index) => (
+            <Grid container key={index}>
+              <Grid
+                component={'button'}
+                item
+                xs={4}
+                sx={{
+                  width: '100%',
+                  opacity: 0.9,
+                  bgcolor: 'primary.light',
+                  padding: '5px',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  border: 'none',
+                  '&:hover': {
+                    bgcolor: 'primary.main',
+                    transition: '.3s ease',
+                  },
+                  '&:disable': {
+                    bgcolor: 'primary.lighter',
+                    opacity: 0.8,
+                  },
+                }}
+              >
+                <Typography variant='body1' fontWeight={'700'} textAlign='center'>
+                  {/* @ts-ignore */}
+                  {format(date.date.toDate(), 'MM/dd/yyyy HH:mm')}
+                </Typography>
               </Grid>
-            )
-          })}
+            </Grid>
+          ))}
         </Grid>
       </Grid>
     </Box>

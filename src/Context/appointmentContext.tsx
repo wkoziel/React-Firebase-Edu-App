@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
+import { addDoc, collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import { createContext, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { collections } from '../Consts/collections'
@@ -12,7 +12,7 @@ const appointmentsCollection = collection(database, collections.appointments)
 
 interface AppointmentContextInterface {
   getAllAppointments: () => any
-  addAppointment: (data: any) => void
+  addAppointment: (data: any) => Promise<void>
   getAppointment: (id: string) => void
   getAppointments: (id: string) => any
 }
@@ -53,21 +53,28 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     else return null
   }
 
-  const addAppointment = async (data: Appointment) => {
-    const docRef = doc(database, `${collections.appointments}`, userID)
-    const docSnap = await getDoc(docRef)
-
-    setDoc(
-      doc(appointmentsCollection, userID),
-      docSnap.exists() ? { appointments: [...docSnap.data().appointments, ...[data]] } : { appointments: [data] },
-    )
+  const addAppointment = async (data: Appointment) =>
+    addDoc(appointmentsCollection, data)
       .then(() => {
         navigate(paths.teacherDashboard)
       })
       .catch((error) => {
         openModal('Nie udało się', 'Przedmiot nie został dodany', 'Powrót')
       })
-  }
+
+  // const docRef = doc(database, `${collections.appointments}`, userID)
+  // const docSnap = await getDoc(docRef)
+
+  // setDoc(
+  //   doc(appointmentsCollection, userID),
+  //   docSnap.exists() ? { appointments: [...docSnap.data().appointments, ...[data]] } : { appointments: [data] },
+  // )
+  //   .then(() => {
+  //     navigate(paths.teacherDashboard)
+  //   })
+  //   .catch((error) => {
+  //     openModal('Nie udało się', 'Przedmiot nie został dodany', 'Powrót')
+  //   })
 
   const value: AppointmentContextInterface = { getAllAppointments, addAppointment, getAppointment, getAppointments }
 

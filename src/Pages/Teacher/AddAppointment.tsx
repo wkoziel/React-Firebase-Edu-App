@@ -30,7 +30,7 @@ const AddAppointment = (props: Props) => {
   })
 
   const onSubmit = (data: Appointment) => {
-    addAppointment(data)
+    addAppointment(data).then(() => console.log('end'))
   }
 
   const { subject } = watch()

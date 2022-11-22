@@ -12,6 +12,7 @@ const ProfileCreation = lazy(() => import('../Pages/ProfileCreation/ProfileCreat
 // Teacher
 const TeacherDashboard = lazy(() => import('../Pages/Teacher/Dashboard'))
 const TeacherAddAppointment = lazy(() => import('../Pages/Teacher/AddAppointment'))
+const TeacherProfile = lazy(() => import('../Pages/Teacher/Profile'))
 
 // Student
 const StudentDashboard = lazy(() => import('../Pages/Student/Dashboard'))
@@ -32,6 +33,7 @@ const Routes = () => {
           {/* TEACHER */}
           <Route path={paths.teacherDashboard} element={<TeacherDashboard />} />
           <Route path={paths.teacherAddAppointment} element={<TeacherAddAppointment />} />
+          <Route path={paths.teacherProfile} element={<TeacherProfile />} />
 
           {/* Student */}
           <Route path={paths.studentDashboard} element={<StudentDashboard />} />

@@ -19,7 +19,7 @@ import paths from '../../Routes/paths'
 const pagesTeacher = [
   { name: 'Strona główna', route: paths.teacherDashboard },
   { name: 'Zarządzaj terminami', route: paths.teacherAddAppointment },
-  { name: 'Profil', route: paths.teacherDashboard },
+  { name: 'Profil', route: paths.teacherProfile },
 ]
 const pagesStudent = [
   { name: 'Strona główna', route: '/' },

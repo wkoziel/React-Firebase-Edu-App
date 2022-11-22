@@ -3,7 +3,8 @@ import { DatePicker } from '@mui/x-date-pickers'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import Select from '../../../Components/Select/Select'
-import { citiesOptions, genderOptions } from '../../../Consts/selectOptions'
+import { rolesOptions } from '../../../Consts/roles'
+import { citiesOptions, genderOptions, subjectOptions } from '../../../Consts/selectOptions'
 
 type Props = {
   setLowerStep: () => void
@@ -11,12 +12,14 @@ type Props = {
 }
 
 const Step2 = ({ setUpperStep, setLowerStep }: Props) => {
-  const { control } = useFormContext()
+  const { control, getValues } = useFormContext()
+
+  const role = getValues('role')
 
   //FIXME: TODO: Apply better fields validation
 
   return (
-    <Grid container spacing={2} sx={{ margin: '0 auto', padding: '0 2rem' }}>
+    <Grid container spacing={1.5} sx={{ margin: '0 auto', padding: '0 2rem' }}>
       <Grid item xs={12}>
         <Typography variant='h4'>Stwórz swój profil</Typography>
         <Typography variant='caption' color='text.secondary'>
@@ -131,57 +134,48 @@ const Step2 = ({ setUpperStep, setLowerStep }: Props) => {
         />
       </Grid>
 
-      <Grid item xs={12} sx={{ marginTop: '2rem' }}>
-        <Typography variant='caption' fontWeight='700' color='text.secondary'>
-          Adres odbywania korepetycji
-        </Typography>
-      </Grid>
-
-      <Grid item xs={12}>
-        <Controller
-          control={control}
-          name='address'
-          defaultValue=''
-          rules={{ required: 'To pole jest wymagane' }}
-          render={({ field, fieldState: { error } }) => (
-            <TextField {...field} label='Adres zamieszkania' error={!!error} helperText={error?.message} />
-          )}
-        />
-      </Grid>
-
-      <Grid item xs={6}>
-        <Controller
-          control={control}
-          name='city'
-          defaultValue={''}
-          rules={{ required: 'To pole jest wymagane' }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <Select
-              onChange={onChange}
-              value={value}
-              label='Miasto'
-              error={!!error}
-              helperText={error?.message}
-              fullWidth
-              options={citiesOptions}
+      {role === 'teacher' && (
+        <>
+          <Grid item xs={12} sx={{ marginTop: '2rem' }}>
+            <Typography variant='caption' fontWeight='700' color='text.secondary'>
+              Dane korepetycji
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Controller
+              control={control}
+              name='subject'
+              defaultValue={''}
+              rules={{ required: 'To pole jest wymagane' }}
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
+                <Select
+                  onChange={onChange}
+                  value={value}
+                  label='Przedmiot'
+                  error={!!error}
+                  helperText={error?.message}
+                  fullWidth
+                  options={subjectOptions}
+                />
+              )}
             />
-          )}
-        />
-      </Grid>
+          </Grid>
 
-      <Grid item xs={6}>
-        <Controller
-          control={control}
-          name='postCode'
-          defaultValue=''
-          rules={{ required: 'To pole jest wymagane' }}
-          render={({ field, fieldState: { error } }) => (
-            <TextField {...field} label='Kod pocztowy' error={!!error} helperText={error?.message} />
-          )}
-        />
-      </Grid>
+          <Grid item xs={6}>
+            <Controller
+              control={control}
+              name='address'
+              defaultValue=''
+              rules={{ required: 'To pole jest wymagane' }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField {...field} label='Adres odbywania korepetycji' error={!!error} helperText={error?.message} />
+              )}
+            />
+          </Grid>
+        </>
+      )}
 
-      <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+      <Grid item xs={12} sx={{ justifySelf: 'flex-end', display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
         <Button onClick={setLowerStep} variant='text' size='large' sx={{ minWidth: '150px' }}>
           Powrót
         </Button>

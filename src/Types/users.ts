@@ -21,13 +21,12 @@ export type UserProfile = {
   lastName: string
   bio: string
   birthday: Date | string
-  gender: 'female' | 'male' | 'other'
+  gender: string
   role: 'student' | 'teacher' | 'admin'
-  address: string
-  city: string
-  postCode: string
+  address?: string
   phone: string
   email: string
+  subject: string
 }
 
 export type UserRole = 'student' | 'teacher' | 'admin'

@@ -7,6 +7,7 @@ const paths = {
   // TEACHER
   teacherDashboard: '/teacher/dashboard',
   teacherAddAppointment: '/teacher/add-appointment',
+  teacherProfile: '/teacher/profile',
 
   // STUDENT
   studentDashboard: '/student/dashboard',

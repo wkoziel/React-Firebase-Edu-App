@@ -35,7 +35,7 @@ const ProfileCreation = () => {
   return (
     <Container sx={{ padding: '2rem', height: '100vh' }}>
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} style={{ height: '100%' }}>
           {step === 1 && <Step1 setUpperStep={setUpperStep} />}
           {step === 2 && <Step2 setUpperStep={setUpperStep} setLowerStep={setLowerStep} />}
         </form>

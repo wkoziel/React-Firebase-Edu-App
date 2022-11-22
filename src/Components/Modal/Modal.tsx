@@ -13,7 +13,7 @@ type Props = {
 const Modal = ({ open, title, text, buttonText, onClose }: Props) => {
   console.log('Modal')
   return (
-    <Dialog open={open} PaperProps={{ sx: { width: '40rem', minHeight: '20rem', borderRadius: 5, padding: '1rem' } }}>
+    <Dialog open={open} PaperProps={{ sx: { width: '40rem', minHeight: '20rem', borderRadius: 5, padding: '2rem' } }}>
       <IconButton
         onClick={onClose}
         sx={{
@@ -24,9 +24,11 @@ const Modal = ({ open, title, text, buttonText, onClose }: Props) => {
       >
         <CloseIcon />
       </IconButton>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>{text}</DialogContentText>
+      <DialogTitle variant='h4' textAlign={'center'}>
+        {title}
+      </DialogTitle>
+      <DialogContent sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <DialogContentText variant='h5'>{text}</DialogContentText>
       </DialogContent>
       <DialogActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Button onClick={onClose} size='large'>

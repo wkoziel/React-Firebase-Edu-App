@@ -19,8 +19,10 @@ interface UserContextInterface {
   signInUser: (userData: UserSignIn) => void
   createUser: (userData: UserSignIn) => void
   createUserProfile: (userData: UserProfile) => void
+  updateUserProfile: (userData: UserProfile) => Promise<void>
   getUserProfile: (id: string) => any
   logoutUser: () => void
+  getMyProfile: () => any
 }
 
 const UserContext = createContext<UserContextInterface | undefined>(undefined)
@@ -115,7 +117,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       user,
     })
       .then(() => {
-        openModal('Sukces', 'Użytkownik został dodany', 'Potwierdź')
+        openModal(
+          'Sukces',
+          'Twój profil został pomyślnie utworzony. \n Teraz możesz w pełni korzystać z platformy.',
+          'Potwierdź',
+        )
         if (user.role === 'teacher') navigate(paths.teacherDashboard)
         if (user.role === 'student') navigate(paths.studentDashboard)
       })
@@ -124,7 +130,25 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
   }
 
+  const updateUserProfile = async (user: UserProfile) =>
+    setDoc(doc(userCollection, userID), {
+      user,
+    })
+      .then(() => {
+        openModal('Sukces', 'Twój profil został pomyślnie edytowany.', 'Potwierdź')
+      })
+      .catch((error) => {
+        openModal('Nie udało się', 'Użytkownik nie został dodany', 'Powrót')
+      })
+
   const getUserProfile = async (id: string) => {}
+
+  const getMyProfile = async () => {
+    const docRef = doc(database, `${collections.users}/${userID}`)
+    const docSnap = await getDoc(docRef)
+    if (docSnap.exists()) return docSnap.data().user
+    else return null
+  }
 
   const value: UserContextInterface = {
     userID,
@@ -137,6 +161,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     createUserProfile,
     getUserProfile,
     logoutUser,
+    getMyProfile,
+    updateUserProfile,
   }
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>
