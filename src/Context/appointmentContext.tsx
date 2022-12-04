@@ -5,6 +5,7 @@ import {
   DocumentData,
   DocumentSnapshot,
   getDoc,
+  getDocs,
   onSnapshot,
   query,
   setDoc,
@@ -23,9 +24,9 @@ const appointmentsCollection = collection(database, collections.appointments)
 
 interface AppointmentContextInterface {
   getAllAppointments: () => any
-  addAppointment: (data: any) => Promise<void>
-  getAppointment: (id: string) => Promise<DocumentSnapshot<DocumentData>>
-  getAppointments: (id: string) => any
+  addAppointments: (data: any) => Promise<void>
+  applyForAppointmentDate: (selectedDateId: string, appointmentId: string, studentId: string) => Promise<void>
+  getAppointments: (id: string) => Promise<DocumentSnapshot<DocumentData>>
 }
 
 const AppointmentContext = createContext<AppointmentContextInterface | undefined>(undefined)
@@ -44,30 +45,18 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const navigate = useNavigate()
   const { userID } = useUserContext()
 
-  const getAllAppointments = () => {
-    return appointmentsCollection
+  const getAllAppointments = async () => {
+    const result: Appointment[] = []
+    const querySnapshot = await getDocs(appointmentsCollection)
+    querySnapshot.forEach((doc) => {
+      result.push(doc.data().data)
+    })
+    return result
   }
 
-  const getAppointments = async (id: string) => {
-    const docRef = doc(database, `${collections.appointments}/${id}`)
-    const docSnap = await getDoc(docRef)
-    if (docSnap.exists()) return docSnap.data().appointments
-    else return null
-  }
+  const getAppointments = async (id: string) => getDoc(doc(database, collections.appointments, id))
 
-  const getAppointment = async (id: string) => getDoc(doc(database, collections.appointments, id))
-
-  // const result: Appointment[] = []
-  // const q = query(appointmentsCollection, where('teacherId', '==', id))
-  // onSnapshot(q, (data) => data.docs.forEach((item) => result.push(item.data() as Appointment)))
-  // return result
-
-  // const docRef = doc(database, `${collections.appointments}/${id}`)
-  // const docSnap = await getDoc(docRef)
-  // if (docSnap.exists()) return docSnap.data().appointments
-  // else return null
-
-  const addAppointment = async (data: Appointment) =>
+  const addAppointments = async (data: Appointment) =>
     setDoc(doc(appointmentsCollection, userID), {
       data,
     })
@@ -79,7 +68,52 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         openModal('Nie udało się', 'Terminy nie został dodany. \n Spróbuj ponownie', 'Powrót')
       })
 
-  const value: AppointmentContextInterface = { getAllAppointments, addAppointment, getAppointment, getAppointments }
+  const applyForAppointmentDate = async (selectedDateId: string, appointmentId: string, studentId: string) => {
+    getDoc(doc(database, collections.appointments, appointmentId))
+      .then((response) => {
+        let shouldUpdate = true
+        if (response && response.exists()) {
+          const appointments: Appointment = response.data().data
+          appointments.dates.forEach((date) => {
+            if (date.id === selectedDateId) {
+              if (!date.assignedStudent) {
+                date.assignedStudent = studentId
+              } else {
+                shouldUpdate = false
+              }
+            }
+          })
+
+          if (shouldUpdate) {
+            setDoc(doc(appointmentsCollection, appointmentId), {
+              data: appointments,
+            })
+              .then(() => {
+                openModal('Udało się!', 'Termin został pomyślnie zarezerowowany.', 'Potiwerdź')
+              })
+              .catch((error) => {
+                console.error(error)
+              })
+          } else {
+            openModal(
+              'Termin nie został zarezerwowany!',
+              'Bardzo nam przykro. Wybrany termin został już zarezerwowany przez innego użytkownika.',
+              'Zamknij',
+            )
+          }
+        }
+      })
+      .catch((error) => {
+        openModal('Przepraszamy!', 'Napotkaliśmy problem w trakcie rezerwacji terminu \n Spóbuj później.', 'Zamknij')
+      })
+  }
+
+  const value: AppointmentContextInterface = {
+    getAllAppointments,
+    addAppointments,
+    getAppointments,
+    applyForAppointmentDate,
+  }
 
   return <AppointmentContext.Provider value={value}>{children}</AppointmentContext.Provider>
 }

@@ -1,21 +1,42 @@
 import { Box, Chip, Grid, Rating, Typography } from '@mui/material'
 import { format } from 'date-fns'
-import React from 'react'
+import React, { useState } from 'react'
 import { subjectOptions } from '../../Consts/selectOptions'
+import { useAppointmentContext } from '../../Context/appointmentContext'
+import { useUserContext } from '../../Context/userContext'
 import { Appointment } from '../../Types/Apointments'
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 
 type Props = {
   appointment: Appointment
+  reloadData: () => void
 }
 
-const TeacherCard = ({ appointment }: Props) => {
-  const { subject, bio, dates, price } = appointment
+const TeacherCard = ({ appointment, reloadData }: Props) => {
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [selectedDateId, setSelectedDateId] = useState('')
+  const { userID } = useUserContext()
+  const { applyForAppointmentDate } = useAppointmentContext()
+  const { subject, bio, dates, price, teacher } = appointment
+
+  const onDateTaleClick = (DateId: string) => {
+    setSelectedDateId(DateId)
+    setDialogOpen(true)
+  }
+
+  const applyForAppointment = async () => {
+    setDialogOpen(false)
+    const appointmentId = appointment.id
+    applyForAppointmentDate(selectedDateId, appointmentId, userID).then(() => reloadData())
+  }
+
   return (
     <Box width={'100%'} mt={2}>
       <Grid container>
         <Grid item xs={4} sx={{ padding: '20px', borderRight: '1px solid lightgray' }}>
-          {/* TODO: ADD name */}
-          <Typography variant='h5'>Wojceich Kozieł</Typography>
+          <Typography variant='h5'>
+            {teacher.firstName} {teacher.lastName}
+          </Typography>
           <Box sx={{ display: 'flex', my: '10px', justifyContent: 'space-between', px: '5px' }}>
             <Typography variant='body1'>{subjectOptions.find((s) => s.value === subject)?.name}</Typography>
             <Typography variant='body1'>{price} zł/h</Typography>
@@ -23,7 +44,7 @@ const TeacherCard = ({ appointment }: Props) => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, my: 1 }}>
             <Rating name='read-only' value={4} readOnly />
             <Typography variant='body2' color={'gray'}>
-              Ocena 4.2 (40 opinii)
+              Ocena 4.2 (40 opinii) {/* TODO: Change to real rate*/}
             </Typography>
           </Box>
           <Typography variant='caption'>{bio}</Typography>
@@ -38,14 +59,17 @@ const TeacherCard = ({ appointment }: Props) => {
           xs={8}
           sx={{ display: 'flex', flexDirection: 'column', gap: '5px', borderRadius: '12px', padding: '10px' }}
         >
-          {dates.map((date, index) => (
-            <Grid container key={index}>
+          <Grid container spacing={1}>
+            {dates.map((date, index) => (
               <Grid
-                component={'button'}
                 item
+                key={index}
+                component={'button'}
+                onClick={() => onDateTaleClick(date.id)}
                 xs={4}
+                disabled={!!date.assignedStudent}
                 sx={{
-                  width: '100%',
+                  width: '95%',
                   opacity: 0.9,
                   bgcolor: 'primary.light',
                   padding: '5px',
@@ -67,10 +91,19 @@ const TeacherCard = ({ appointment }: Props) => {
                   {format(date.date.toDate(), 'MM/dd/yyyy HH:mm')}
                 </Typography>
               </Grid>
-            </Grid>
-          ))}
+            ))}
+          </Grid>
         </Grid>
       </Grid>
+      {dialogOpen && (
+        <ConfirmDialog
+          isOpen={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          onConfirm={() => applyForAppointment()}
+          title={'Zarezerwuj termin'}
+          text={'Czy na pewno chcesz dokonać reserwacji terminu?'}
+        />
+      )}
     </Box>
   )
 }

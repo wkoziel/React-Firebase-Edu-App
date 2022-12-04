@@ -14,7 +14,7 @@ import { useUserContext } from '../../Context/userContext'
 type Props = {}
 
 const AddAppointment = (props: Props) => {
-  const { addAppointment, getAppointment } = useAppointmentContext()
+  const { addAppointments, getAppointments } = useAppointmentContext()
   const { user, userID } = useUserContext()
   const navigate = useNavigate()
 
@@ -26,28 +26,36 @@ const AddAppointment = (props: Props) => {
 
   useEffect(() => {
     if (userID)
-      getAppointment(userID).then((response) => {
+      getAppointments(userID).then((response) => {
         if (response.exists()) {
           const data = response.data().data
-          reset({ ...data, dates: data.dates.map((d: any) => ({ date: d.date.toDate(), id: d.id })) })
+          reset({
+            ...data,
+            dates: data.dates.map((d: any) => ({
+              date: d.date.toDate(),
+              id: d.id,
+              assignedStudent: d?.assignedStudent || '',
+            })),
+          })
         }
       })
-  }, [userID])
+  }, [userID, getAppointments, reset])
 
   useEffect(() => {
     if (user) {
       setValue('subject', user.subject)
-      setValue('teacherId', user.userId)
+      setValue('teacher', user)
+      setValue('id', user.userId)
     }
-  }, [user])
+  }, [user, setValue])
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'dates',
   })
 
-  const onSubmit = (data: Appointment) => {
-    addAppointment(data).then(() => console.log('end'))
+  const onSubmit = async (data: Appointment) => {
+    addAppointments(data)
   }
 
   return (
@@ -141,8 +149,14 @@ const AddAppointment = (props: Props) => {
                   )}
                 />
 
-                <IconButton onClick={() => remove(index)} sx={{ width: 35, height: 35 }}>
-                  <RemoveCircleIcon sx={{ width: 35, height: 35, color: 'primary.main' }} />
+                <IconButton
+                  disabled={!!item.assignedStudent}
+                  onClick={() => remove(index)}
+                  sx={{ width: 35, height: 35 }}
+                >
+                  <RemoveCircleIcon
+                    sx={{ width: 35, height: 35, color: !!item.assignedStudent ? 'gray' : 'primary.main' }}
+                  />
                 </IconButton>
               </Grid>
             ))}

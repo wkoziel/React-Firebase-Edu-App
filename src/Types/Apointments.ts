@@ -1,9 +1,11 @@
 import { Timestamp } from 'firebase/firestore'
+import { UserProfile } from './Users'
 
 export type Appointment = {
-  teacherId: string
+  id: string
   subject: string
   bio: string
   price: number
-  dates: { id: string; date: Date | Timestamp }[]
+  dates: { id: string; date: Date | Timestamp; assignedStudent?: string }[]
+  teacher: UserProfile
 }

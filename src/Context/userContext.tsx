@@ -3,7 +3,7 @@ import { UserProfile, UserRole, UserSignIn } from '../Types/Users'
 import { AuthMessage } from '../Types/Others'
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { auth, database } from '../Database/firebaseConfig'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import paths from '../Routes/paths'
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import { useModalContext } from './modalContext'
@@ -141,7 +141,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         openModal('Nie udało się', 'Użytkownik nie został dodany', 'Powrót')
       })
 
-  const getUserProfile = async (id: string) => {}
+  const getUserProfile = async (id: string) => getDoc(doc(database, collections.users, id))
 
   const getMyProfile = async () => {
     const docRef = doc(database, `${collections.users}/${userID}`)
