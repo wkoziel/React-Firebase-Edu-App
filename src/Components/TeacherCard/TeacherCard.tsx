@@ -58,7 +58,7 @@ const TeacherCard = ({ appointment, reloadData }: Props) => {
           <Typography variant='caption'>{bio}</Typography>
           <Box mt={2} sx={{ display: 'flex', gap: 1 }}>
             <Chip color='primary' label='Poziom podstawowy' size='small' variant='outlined' />
-            <Chip color='primary' label='Zdalne' size='small' variant='outlined' />
+            <Chip color='primary' label={teacher.address} size='small' variant='outlined' />
           </Box>
         </Grid>
 
@@ -106,7 +106,7 @@ const TeacherCard = ({ appointment, reloadData }: Props) => {
           onClose={() => setDialogOpen(false)}
           onConfirm={() => applyForAppointment()}
           title={'Zarezerwuj termin'}
-          text={'Czy na pewno chcesz dokonać reserwacji terminu?'}
+          text={'Czy na pewno chcesz dokonać rezerwacji terminu?'}
         />
       )}
     </Box>

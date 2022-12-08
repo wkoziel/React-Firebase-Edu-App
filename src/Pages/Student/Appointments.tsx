@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -42,23 +42,28 @@ const TableCellStyled = styled(TableCell)({
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [appointments, setAppointments] = useState<StudentDate[] | null>(null)
-  const { studentGetAllMyAppointments } = useAppointmentContext()
+  const { studentGetAllMyAppointments, resignFromAppointmentDate } = useAppointmentContext()
   const { userID } = useUserContext()
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await studentGetAllMyAppointments(userID)
-        if (response) {
-          setAppointments(response)
-        }
-      } finally {
-        setIsLoading(false)
+  const loadData = useCallback(async () => {
+    try {
+      const response = await studentGetAllMyAppointments(userID)
+      if (response) {
+        setAppointments(response)
       }
+    } finally {
+      setIsLoading(false)
     }
-    if (userID) loadData()
   }, [userID, studentGetAllMyAppointments])
+
+  useEffect(() => {
+    if (userID) loadData()
+  }, [userID, loadData])
+
+  const handleDeleteOnClick = async (dateId: string, appointmentId: string) => {
+    resignFromAppointmentDate(dateId, appointmentId).then(() => setTimeout(() => loadData(), 1000))
+  }
 
   if (!isLoading && !appointments?.length)
     return (
@@ -133,7 +138,9 @@ const Dashboard = () => {
                             </Tooltip>
 
                             <Tooltip title={'Zrezygnuj z terminu'}>
-                              <IconButton>{<DeleteIcon />}</IconButton>
+                              <IconButton onClick={() => handleDeleteOnClick(row.dateId, row.appointmentId)}>
+                                {<DeleteIcon />}
+                              </IconButton>
                             </Tooltip>
                           </TableCellStyled>
                         </TableRow>

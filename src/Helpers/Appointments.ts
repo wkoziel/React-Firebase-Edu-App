@@ -29,6 +29,8 @@ export const mapDatesForTableStudent = (dates: StudentDate[]) => {
       teacherPhone: date.teacher?.phone || '-',
       teacherAddress: date.teacher?.phone || '-',
       subject: date.teacher.subject,
+      appointmentId: date.teacher.userId,
+      dateId: date.id,
     }
   })
   return result

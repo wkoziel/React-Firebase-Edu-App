@@ -21,7 +21,9 @@ const ConfirmDialog = ({ isOpen = false, title, text, onConfirm, onClose }: Prop
         {title}
       </DialogTitle>
       <DialogContent sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <DialogContentText variant='h5'>{text}</DialogContentText>
+        <DialogContentText variant='h5' textAlign={'center'}>
+          {text}
+        </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Button onClick={onClose} variant='text' size='large'>

@@ -17,6 +17,7 @@ interface AppointmentContextInterface {
   applyForAppointmentDate: (selectedDateId: string, appointmentId: string, student: UserProfile) => Promise<void>
   getAppointments: (id: string) => Promise<DocumentSnapshot<DocumentData>>
   studentGetAllMyAppointments: (id: string) => any
+  resignFromAppointmentDate: (selectedDateId: string, appointmentId: string) => Promise<void>
 }
 
 const AppointmentContext = createContext<AppointmentContextInterface | undefined>(undefined)
@@ -98,6 +99,42 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
       })
   }
 
+  const resignFromAppointmentDate = async (selectedDateId: string, appointmentId: string) => {
+    getDoc(doc(database, collections.appointments, appointmentId))
+      .then((response) => {
+        let shouldUpdate = true
+        if (response && response.exists()) {
+          const appointments: Appointment = response.data().data
+          appointments.dates.forEach((date) => {
+            if (date.id === selectedDateId) {
+              if (date.assignedStudent) {
+                delete date.assignedStudent
+              } else {
+                shouldUpdate = false
+              }
+            }
+          })
+
+          if (shouldUpdate) {
+            setDoc(doc(appointmentsCollection, appointmentId), {
+              data: appointments,
+            })
+              .then(() => {
+                openModal('Udało się!', 'Termin został pomyślnie usunięty.', 'Potiwerdź')
+              })
+              .catch((error) => {
+                console.error(error)
+              })
+          } else {
+            openModal('Termin nie został usunięty!', 'Wystąpił nieoczekiwany błąd spróbuj później', 'Zamknij')
+          }
+        }
+      })
+      .catch((error) => {
+        openModal('Przepraszamy!', 'Napotkaliśmy problem w trakcie rezerwacji terminu \n Spóbuj później.', 'Zamknij')
+      })
+  }
+
   const studentGetAllMyAppointments = async (studentId: string) => {
     const allAppointments = await getAllAppointments()
     const result: StudentDate[] = []
@@ -116,6 +153,7 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
     getAppointments,
     applyForAppointmentDate,
     studentGetAllMyAppointments,
+    resignFromAppointmentDate,
   }
 
   return <AppointmentContext.Provider value={value}>{children}</AppointmentContext.Provider>
