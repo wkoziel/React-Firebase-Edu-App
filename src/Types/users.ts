@@ -15,7 +15,7 @@ export type User = {
 
 export type PostUser = {}
 
-export type UserProfile = {
+export type UserProfileType = {
   userId: string
   firstName: string
   lastName: string

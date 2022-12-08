@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { UserProfile, UserRole, UserSignIn } from '../Types/Users'
+import { UserProfileType, UserRole, UserSignIn } from '../Types/Users'
 import { AuthMessage } from '../Types/Others'
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { auth, database, storage } from '../Database/firebaseConfig'
@@ -13,14 +13,14 @@ import { getDownloadURL, ref } from 'firebase/storage'
 const userCollection = collection(database, collections.users)
 interface UserContextInterface {
   userID: string
-  user: UserProfile | null
+  user: UserProfileType | null
   authMessage: AuthMessage | null
   isAuth: boolean
   userRole: UserRole | null
   signInUser: (userData: UserSignIn) => void
   createUser: (userData: UserSignIn) => void
-  createUserProfile: (userData: UserProfile) => void
-  updateUserProfile: (userData: UserProfile) => Promise<void>
+  createUserProfile: (userData: UserProfileType) => void
+  updateUserProfile: (userData: UserProfileType) => Promise<void>
   getUserProfile: (id: string) => any
   logoutUser: () => void
   getMyProfile: () => any
@@ -42,7 +42,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [userID, setUserID] = useState<string>('')
   const [authMessage, setAuthMessage] = useState<AuthMessage | null>(null)
   const [userRole, setUserRole] = useState<UserRole | null>(null)
-  const [user, setUser] = useState<UserProfile | null>(null)
+  const [user, setUser] = useState<UserProfileType | null>(null)
   const [userImage, setUserImage] = useState('')
 
   const isAuth = !!userID
@@ -120,7 +120,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigate(paths.login)
   }
 
-  const createUserProfile = async (user: UserProfile) => {
+  const createUserProfile = async (user: UserProfileType) => {
     setDoc(doc(userCollection, userID), {
       user,
     })
@@ -138,7 +138,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
   }
 
-  const updateUserProfile = async (user: UserProfile) =>
+  const updateUserProfile = async (user: UserProfileType) =>
     setDoc(doc(userCollection, userID), {
       user,
     })

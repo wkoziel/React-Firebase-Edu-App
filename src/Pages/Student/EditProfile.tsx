@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useUserContext } from '../../Context/userContext'
-import { UserProfile } from '../../Types/Users'
+import { UserProfileType } from '../../Types/Users'
 import { Container, Grid, TextField, Button, Typography } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import Select from '../../Components/Select/Select'
@@ -15,7 +15,7 @@ const EditProfile = (props: Props) => {
   const { getMyProfile, updateUserProfile } = useUserContext()
   const navigate = useNavigate()
 
-  const methods = useForm<UserProfile>({
+  const methods = useForm<UserProfileType>({
     mode: 'onChange',
   })
 
@@ -34,7 +34,7 @@ const EditProfile = (props: Props) => {
     loadDate()
   }, [getMyProfile, reset])
 
-  const onSubmit = async (data: UserProfile) => {
+  const onSubmit = async (data: UserProfileType) => {
     updateUserProfile(data)
   }
 

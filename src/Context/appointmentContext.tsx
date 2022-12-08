@@ -5,7 +5,7 @@ import { collections } from '../Consts/collections'
 import { database } from '../Database/firebaseConfig'
 import paths from '../Routes/paths'
 import { Appointment, StudentDate } from '../Types/Apointments'
-import { UserProfile } from '../Types/Users'
+import { UserProfileType } from '../Types/Users'
 import { useModalContext } from './modalContext'
 import { useUserContext } from './userContext'
 
@@ -14,7 +14,7 @@ const appointmentsCollection = collection(database, collections.appointments)
 interface AppointmentContextInterface {
   getAllAppointments: () => any
   addAppointments: (data: any) => Promise<void>
-  applyForAppointmentDate: (selectedDateId: string, appointmentId: string, student: UserProfile) => Promise<void>
+  applyForAppointmentDate: (selectedDateId: string, appointmentId: string, student: UserProfileType) => Promise<void>
   getAppointments: (id: string) => Promise<DocumentSnapshot<DocumentData>>
   studentGetAllMyAppointments: (id: string) => any
   resignFromAppointmentDate: (selectedDateId: string, appointmentId: string) => Promise<void>
@@ -59,7 +59,7 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         openModal('Nie udało się', 'Terminy nie został dodany. \n Spróbuj ponownie', 'Powrót')
       })
 
-  const applyForAppointmentDate = async (selectedDateId: string, appointmentId: string, student: UserProfile) => {
+  const applyForAppointmentDate = async (selectedDateId: string, appointmentId: string, student: UserProfileType) => {
     getDoc(doc(database, collections.appointments, appointmentId))
       .then((response) => {
         let shouldUpdate = true

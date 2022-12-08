@@ -7,7 +7,7 @@ import Select from '../../Components/Select/Select'
 import { genderOptions, subjectOptions } from '../../Consts/selectOptions'
 import { useUserContext } from '../../Context/userContext'
 import paths from '../../Routes/paths'
-import { UserProfile } from '../../Types/Users'
+import { UserProfileType } from '../../Types/Users'
 
 type Props = {}
 
@@ -15,7 +15,7 @@ const EditProfile = (props: Props) => {
   const { getMyProfile, updateUserProfile } = useUserContext()
   const navigate = useNavigate()
 
-  const methods = useForm<UserProfile>({
+  const methods = useForm<UserProfileType>({
     mode: 'onChange',
   })
 
@@ -34,7 +34,7 @@ const EditProfile = (props: Props) => {
     loadDate()
   }, [getMyProfile, reset])
 
-  const onSubmit = async (data: UserProfile) => {
+  const onSubmit = async (data: UserProfileType) => {
     updateUserProfile(data)
   }
 

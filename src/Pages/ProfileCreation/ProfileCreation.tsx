@@ -2,7 +2,7 @@ import { Container } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useUserContext } from '../../Context/userContext'
-import { UserProfile } from '../../Types/Users'
+import { UserProfileType } from '../../Types/Users'
 import Step1 from './steps/Step1'
 import Step2 from './steps/Step2'
 
@@ -10,7 +10,7 @@ const ProfileCreation = () => {
   const [step, setStep] = useState(1)
   const { userID, createUserProfile } = useUserContext()
 
-  const methods = useForm<UserProfile>({
+  const methods = useForm<UserProfileType>({
     mode: 'onChange',
   })
 
@@ -28,7 +28,7 @@ const ProfileCreation = () => {
     setStep(step - 1)
   }
 
-  const onSubmit = (data: UserProfile) => {
+  const onSubmit = (data: UserProfileType) => {
     createUserProfile(data)
   }
 

@@ -19,6 +19,7 @@ import { genderOptions, subjectOptions } from '../../Consts/selectOptions'
 import { useUserContext } from '../../Context/userContext'
 import { storage } from '../../Database/firebaseConfig'
 import paths from '../../Routes/paths'
+import { UserProfileType } from '../../Types/Users'
 
 function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
   return (
@@ -45,7 +46,7 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 }
 
 type Props = {
-  user: any | null
+  user: UserProfileType | null
   userImage: string
 }
 
