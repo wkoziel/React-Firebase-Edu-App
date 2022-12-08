@@ -18,18 +18,18 @@ import {
 } from '@mui/material'
 import { useAppointmentContext } from '../../Context/appointmentContext'
 import { useUserContext } from '../../Context/userContext'
-import { Appointment } from '../../Types/Apointments'
-import AddIcon from '@mui/icons-material/Add'
+import { StudentDate } from '../../Types/Apointments'
+import EmailIcon from '@mui/icons-material/Email'
+import SearchIcon from '@mui/icons-material/Search'
 import { useNavigate } from 'react-router-dom'
 import paths from '../../Routes/paths'
-import { mapDatesForTableTeacher } from '../../Helpers/Appointments'
-import EmailIcon from '@mui/icons-material/Email'
+import { mapDatesForTableStudent } from '../../Helpers/Appointments'
 import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
+import { subjectOptions } from '../../Consts/selectOptions'
 
 const TableHeaderStyled = styled(TableCell)({
   fontWeight: '600',
-  fontSize: '17px',
+  fontSize: '18px',
   height: '70px',
 })
 
@@ -41,27 +41,26 @@ const TableCellStyled = styled(TableCell)({
 
 const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [appointments, setAppointments] = useState<Appointment | null>(null)
-  const { getAppointments } = useAppointmentContext()
+  const [appointments, setAppointments] = useState<StudentDate[] | null>(null)
+  const { studentGetAllMyAppointments } = useAppointmentContext()
   const { userID } = useUserContext()
   const navigate = useNavigate()
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await getAppointments(userID)
-        if (response && response.exists()) {
-          const data: Appointment = response.data().data
-          setAppointments(data)
+        const response = await studentGetAllMyAppointments(userID)
+        if (response) {
+          setAppointments(response)
         }
       } finally {
         setIsLoading(false)
       }
     }
     if (userID) loadData()
-  }, [userID, getAppointments])
+  }, [userID, studentGetAllMyAppointments])
 
-  if (!isLoading && !appointments?.dates?.length)
+  if (!isLoading && !appointments?.length)
     return (
       <Container
         sx={{
@@ -76,10 +75,11 @@ const Dashboard = () => {
       >
         <Typography variant='h4'>Nie posiadasz jeszcze żadnych terminów</Typography>
         <Typography variant='caption' color='text.secondary'>
-          Tutaj prezentowane są utworzone przez Ciebie terminy. Jeżeli jeszcze ich nie masz, kliknij przycisk poniżej.
+          Tutaj prezentowane są zarezerwowane przez Ciebie terminy. Jeżeli jeszcze ich nie masz, kliknij przycisk
+          poniżej.
         </Typography>
-        <Button onClick={() => navigate(paths.teacherAddAppointment)} size='large' endIcon={<AddIcon />}>
-          Dodaj termin
+        <Button onClick={() => navigate(paths.studentDashboard)} size='large' endIcon={<SearchIcon />}>
+          Znajdź terminy
         </Button>
       </Container>
     )
@@ -94,51 +94,47 @@ const Dashboard = () => {
             <Grid item xs={12}>
               <Typography variant='h4'>Twoje terminy</Typography>
               <Typography variant='caption' color='text.secondary'>
-                Tutaj możesz podejrzeć wszystkie swoje terminy i zobaczyć przypisane do nich osoby
+                Tutaj możesz podejrzeć wszystkie swoje terminy.
               </Typography>
             </Grid>
             <Grid xs={12} sx={{ height: '85%' }}>
-              <TableContainer component={Paper} sx={{ borderRadius: 5 }}>
+              <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} size='small' aria-label='a dense table'>
                   <TableHead>
                     <TableRow>
+                      <TableHeaderStyled>Przedmiot</TableHeaderStyled>
                       <TableHeaderStyled>Termin (Data / Godzina)</TableHeaderStyled>
-                      <TableHeaderStyled>Osoba rezerwująca</TableHeaderStyled>
+                      <TableHeaderStyled>Korepetytor</TableHeaderStyled>
                       <TableHeaderStyled>Adres e-mail</TableHeaderStyled>
                       <TableHeaderStyled>Numer telefonu</TableHeaderStyled>
+                      <TableHeaderStyled>Adres</TableHeaderStyled>
                       <TableHeaderStyled align='right'></TableHeaderStyled>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {appointments &&
-                      mapDatesForTableTeacher(appointments?.dates).map((row, index) => (
+                      mapDatesForTableStudent(appointments).map((row, index) => (
                         <TableRow key={index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                          <TableCellStyled component='th' scope='row'>
+                            {subjectOptions.find((s) => s.value === row.subject)?.name}
+                          </TableCellStyled>
                           <TableCellStyled component='th' scope='row'>
                             {row.date}
                           </TableCellStyled>
-                          <TableCellStyled>{row.studentName}</TableCellStyled>
-                          <TableCellStyled>{row.studentEmail}</TableCellStyled>
-                          <TableCellStyled>{row.studentPhone}</TableCellStyled>
+                          <TableCellStyled>{row.teacherName}</TableCellStyled>
+                          <TableCellStyled>{row.teacherEmail}</TableCellStyled>
+                          <TableCellStyled>{row.teacherPhone}</TableCellStyled>
+                          <TableCellStyled>{row.teacherAddress}</TableCellStyled>
                           <TableCellStyled align='right'>
-                            {row.studentEmail !== '-' && (
-                              <Tooltip title={'Napisz wiadomość'}>
-                                <IconButton href={`mailto:${row.studentEmail}`} target='_top' rel='noopener noreferrer'>
-                                  {<EmailIcon />}
-                                </IconButton>
-                              </Tooltip>
-                            )}
+                            <Tooltip title={'Napisz wiadomość'}>
+                              <IconButton href={`mailto:${row.teacherEmail}`} target='_top' rel='noopener noreferrer'>
+                                {<EmailIcon />}
+                              </IconButton>
+                            </Tooltip>
 
-                            {row.studentEmail === '-' && (
-                              <>
-                                <Tooltip title={'Edytuj termin'}>
-                                  <IconButton>{<EditIcon />}</IconButton>
-                                </Tooltip>
-
-                                <Tooltip title={'Usuń termin'}>
-                                  <IconButton>{<DeleteIcon />}</IconButton>
-                                </Tooltip>
-                              </>
-                            )}
+                            <Tooltip title={'Zrezygnuj z terminu'}>
+                              <IconButton>{<DeleteIcon />}</IconButton>
+                            </Tooltip>
                           </TableCellStyled>
                         </TableRow>
                       ))}

@@ -44,9 +44,7 @@ const theme = createTheme({
         },
       },
     },
-    MuiTooltip: {
-      styleOverrides: {},
-    },
+    MuiTooltip: {},
   },
 })
 

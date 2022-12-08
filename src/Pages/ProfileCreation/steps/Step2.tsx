@@ -3,8 +3,7 @@ import { DatePicker } from '@mui/x-date-pickers'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import Select from '../../../Components/Select/Select'
-import { rolesOptions } from '../../../Consts/roles'
-import { citiesOptions, genderOptions, subjectOptions } from '../../../Consts/selectOptions'
+import { genderOptions, subjectOptions } from '../../../Consts/selectOptions'
 
 type Props = {
   setLowerStep: () => void

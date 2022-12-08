@@ -1,22 +1,11 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  DocumentData,
-  DocumentSnapshot,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  query,
-  setDoc,
-  where,
-} from 'firebase/firestore'
+import { collection, doc, DocumentData, DocumentSnapshot, getDoc, getDocs, setDoc } from 'firebase/firestore'
 import { createContext, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { collections } from '../Consts/collections'
 import { database } from '../Database/firebaseConfig'
 import paths from '../Routes/paths'
-import { Appointment } from '../Types/Apointments'
+import { Appointment, StudentDate } from '../Types/Apointments'
+import { UserProfile } from '../Types/Users'
 import { useModalContext } from './modalContext'
 import { useUserContext } from './userContext'
 
@@ -25,8 +14,9 @@ const appointmentsCollection = collection(database, collections.appointments)
 interface AppointmentContextInterface {
   getAllAppointments: () => any
   addAppointments: (data: any) => Promise<void>
-  applyForAppointmentDate: (selectedDateId: string, appointmentId: string, studentId: string) => Promise<void>
+  applyForAppointmentDate: (selectedDateId: string, appointmentId: string, student: UserProfile) => Promise<void>
   getAppointments: (id: string) => Promise<DocumentSnapshot<DocumentData>>
+  studentGetAllMyAppointments: (id: string) => any
 }
 
 const AppointmentContext = createContext<AppointmentContextInterface | undefined>(undefined)
@@ -68,7 +58,7 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
         openModal('Nie udało się', 'Terminy nie został dodany. \n Spróbuj ponownie', 'Powrót')
       })
 
-  const applyForAppointmentDate = async (selectedDateId: string, appointmentId: string, studentId: string) => {
+  const applyForAppointmentDate = async (selectedDateId: string, appointmentId: string, student: UserProfile) => {
     getDoc(doc(database, collections.appointments, appointmentId))
       .then((response) => {
         let shouldUpdate = true
@@ -77,7 +67,7 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
           appointments.dates.forEach((date) => {
             if (date.id === selectedDateId) {
               if (!date.assignedStudent) {
-                date.assignedStudent = studentId
+                date.assignedStudent = student
               } else {
                 shouldUpdate = false
               }
@@ -108,11 +98,24 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
       })
   }
 
+  const studentGetAllMyAppointments = async (studentId: string) => {
+    const allAppointments = await getAllAppointments()
+    const result: StudentDate[] = []
+    allAppointments.forEach((a) => {
+      const dates = a.dates
+        .filter((d) => d.assignedStudent?.userId === studentId)
+        .map((d) => ({ date: d.date, id: d.id, teacher: a.teacher }))
+      dates.forEach((d) => result.push(d))
+    })
+    return result
+  }
+
   const value: AppointmentContextInterface = {
     getAllAppointments,
     addAppointments,
     getAppointments,
     applyForAppointmentDate,
+    studentGetAllMyAppointments,
   }
 
   return <AppointmentContext.Provider value={value}>{children}</AppointmentContext.Provider>

@@ -6,6 +6,7 @@ import { useAppointmentContext } from '../../Context/appointmentContext'
 import { useUserContext } from '../../Context/userContext'
 import { Appointment } from '../../Types/Apointments'
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
+import pl from 'date-fns/locale/pl'
 
 type Props = {
   appointment: Appointment
@@ -15,7 +16,7 @@ type Props = {
 const TeacherCard = ({ appointment, reloadData }: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedDateId, setSelectedDateId] = useState('')
-  const { userID } = useUserContext()
+  const { user } = useUserContext()
   const { applyForAppointmentDate } = useAppointmentContext()
   const { subject, bio, dates, price, teacher } = appointment
 
@@ -27,8 +28,13 @@ const TeacherCard = ({ appointment, reloadData }: Props) => {
   const applyForAppointment = async () => {
     setDialogOpen(false)
     const appointmentId = appointment.id
-    applyForAppointmentDate(selectedDateId, appointmentId, userID).then(() => reloadData())
+    if (user) {
+      applyForAppointmentDate(selectedDateId, appointmentId, user).then(() => reloadData())
+    }
   }
+
+  /* @ts-ignore */
+  const formattedDates = dates.map((d) => ({ ...d, date: d.date.toDate() })).sort((a, b) => a.date - b.date)
 
   return (
     <Box width={'100%'} mt={2}>
@@ -59,20 +65,18 @@ const TeacherCard = ({ appointment, reloadData }: Props) => {
           xs={8}
           sx={{ display: 'flex', flexDirection: 'column', gap: '5px', borderRadius: '12px', padding: '10px' }}
         >
-          <Grid container spacing={1}>
-            {dates.map((date, index) => (
-              <Grid
-                item
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+            {formattedDates.map((date, index) => (
+              <Box
                 key={index}
                 component={'button'}
                 onClick={() => onDateTaleClick(date.id)}
-                xs={4}
                 disabled={!!date.assignedStudent}
                 sx={{
-                  width: '95%',
+                  width: '49%',
                   opacity: 0.9,
                   bgcolor: 'primary.light',
-                  padding: '5px',
+                  padding: '8px',
                   borderRadius: '5px',
                   cursor: 'pointer',
                   border: 'none',
@@ -86,13 +90,12 @@ const TeacherCard = ({ appointment, reloadData }: Props) => {
                   },
                 }}
               >
-                <Typography variant='body1' fontWeight={'700'} textAlign='center'>
-                  {/* @ts-ignore */}
-                  {format(date.date.toDate(), 'MM/dd/yyyy HH:mm')}
+                <Typography variant='body1' fontWeight={'600'} textAlign='center'>
+                  {format(date.date, 'dd/MM/yyyy (EEEE) - HH:mm', { locale: pl })}
                 </Typography>
-              </Grid>
+              </Box>
             ))}
-          </Grid>
+          </Box>
         </Grid>
       </Grid>
       {dialogOpen && (

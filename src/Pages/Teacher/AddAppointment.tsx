@@ -62,7 +62,7 @@ const AddAppointment = (props: Props) => {
     <Container sx={{ padding: '2rem', height: '100vh' }}>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={2} sx={{ margin: '0 auto', padding: '0 2rem' }}>
+          <Grid container spacing={2} sx={{ margin: '0 auto' }}>
             <Grid item xs={9}>
               <Typography variant='h4'>Utwórz termin korepetycji</Typography>
               <Typography variant='caption' color='text.secondary'>

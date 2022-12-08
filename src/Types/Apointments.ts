@@ -6,6 +6,10 @@ export type Appointment = {
   subject: string
   bio: string
   price: number
-  dates: { id: string; date: Date | Timestamp; assignedStudent?: string }[]
+  dates: AppointmentDate[]
   teacher: UserProfile
 }
+
+export type AppointmentDate = { id: string; date: Date | Timestamp; assignedStudent?: UserProfile }
+
+export type StudentDate = { id: string; date: Date | Timestamp; teacher: UserProfile }
