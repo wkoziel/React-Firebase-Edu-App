@@ -12,8 +12,6 @@ import paths from '../../Routes/paths'
 type Props = {}
 
 const EditProfile = (props: Props) => {
-  const [image, setImage] = useState({})
-
   const { getMyProfile, updateUserProfile } = useUserContext()
   const navigate = useNavigate()
 

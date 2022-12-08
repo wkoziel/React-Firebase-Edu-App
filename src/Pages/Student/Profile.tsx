@@ -1,13 +1,13 @@
 import { Container } from '@mui/system'
 import React, { useEffect, useState } from 'react'
-import UserProfile from '../../Components/UserProfile/UserProfile'
+import ProfileComponent from '../../Components/UserProfile/UserProfile'
 import { useUserContext } from '../../Context/userContext'
-import { UserProfile as UserProfileType } from '../../Types/Users'
+import { UserProfile } from '../../Types/Users'
 
 type Props = {}
 
 const Profile = (props: Props) => {
-  const [user, setUser] = useState<UserProfileType | null>(null)
+  const [user, setUser] = useState<UserProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { getMyProfile } = useUserContext()
 
@@ -22,7 +22,7 @@ const Profile = (props: Props) => {
     loadDate()
   }, [getMyProfile])
 
-  return <Container>{isLoading ? <div>Loading...</div> : <UserProfile user={user} />}</Container>
+  return <Container>{isLoading ? <div>Loading...</div> : <ProfileComponent user={user} />}</Container>
 }
 
 export default Profile
