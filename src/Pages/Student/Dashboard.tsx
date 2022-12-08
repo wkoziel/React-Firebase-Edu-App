@@ -11,7 +11,6 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [appointments, setAppointments] = useState<Appointment[]>([])
   const [subject, setSubject] = useState<string | null>(null)
-  const [teacher, setTeacher] = useState<string | null>(null)
 
   const { getAllAppointments } = useAppointmentContext()
 
@@ -38,20 +37,7 @@ const Dashboard = () => {
         <Box>Loading...</Box>
       ) : (
         <Grid container spacing={2}>
-          <Grid item xs={7}>
-            <TextField
-              onChange={(e) => setTeacher(e.target.value as string)}
-              value={teacher}
-              label='Szukaj'
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position='end'>
-                    <SearchIcon />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
+          <Grid item xs={7}></Grid>
           <Grid item xs={5}>
             <Select
               onChange={(e) => setSubject(e.target.value as string)}

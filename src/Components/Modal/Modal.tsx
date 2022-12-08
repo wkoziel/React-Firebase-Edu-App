@@ -27,7 +27,9 @@ const Modal = ({ open, title, text, buttonText, onClose }: Props) => {
         {title}
       </DialogTitle>
       <DialogContent sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <DialogContentText variant='h5'>{text}</DialogContentText>
+        <DialogContentText variant='h5' textAlign={'center'}>
+          {text}
+        </DialogContentText>
       </DialogContent>
       <DialogActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Button onClick={onClose} size='large'>

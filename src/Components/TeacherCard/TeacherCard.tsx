@@ -29,7 +29,9 @@ const TeacherCard = ({ appointment, reloadData }: Props) => {
     setDialogOpen(false)
     const appointmentId = appointment.id
     if (user) {
-      applyForAppointmentDate(selectedDateId, appointmentId, user).then(() => reloadData())
+      applyForAppointmentDate(selectedDateId, appointmentId, user).then(() => {
+        setTimeout(() => reloadData(), 1000)
+      })
     }
   }
 

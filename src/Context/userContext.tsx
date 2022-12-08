@@ -2,12 +2,13 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { UserProfile, UserRole, UserSignIn } from '../Types/Users'
 import { AuthMessage } from '../Types/Others'
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth'
-import { auth, database } from '../Database/firebaseConfig'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { auth, database, storage } from '../Database/firebaseConfig'
+import { useNavigate } from 'react-router-dom'
 import paths from '../Routes/paths'
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import { useModalContext } from './modalContext'
 import { collections } from '../Consts/collections'
+import { getDownloadURL, ref } from 'firebase/storage'
 
 const userCollection = collection(database, collections.users)
 interface UserContextInterface {
@@ -23,6 +24,7 @@ interface UserContextInterface {
   getUserProfile: (id: string) => any
   logoutUser: () => void
   getMyProfile: () => any
+  userImage: string
 }
 
 const UserContext = createContext<UserContextInterface | undefined>(undefined)
@@ -41,6 +43,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [authMessage, setAuthMessage] = useState<AuthMessage | null>(null)
   const [userRole, setUserRole] = useState<UserRole | null>(null)
   const [user, setUser] = useState<UserProfile | null>(null)
+  const [userImage, setUserImage] = useState('')
 
   const isAuth = !!userID
   const navigate = useNavigate()
@@ -70,6 +73,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } else {
           navigate(paths.profileCreation)
         }
+
+        const storageRef = ref(storage, `${_userId}.jpg`)
+        getDownloadURL(storageRef)
+          .then((url) => setUserImage(url))
+          .catch((err) => setUserImage(''))
       }
     })
   }, [])
@@ -163,6 +171,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     logoutUser,
     getMyProfile,
     updateUserProfile,
+    userImage,
   }
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>

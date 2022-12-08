@@ -38,7 +38,7 @@ const settingsStudent = [
 ]
 
 const Navbar = () => {
-  const { isAuth, userRole, user } = useUserContext()
+  const { isAuth, userRole, user, userImage } = useUserContext()
   const [anchorElUser, setAnchorElUser] = useState(null)
   const location = useLocation()
   const navigate = useNavigate()
@@ -106,9 +106,9 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Otwórz menu'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={`${user?.firstName} ${user?.lastName}`}>{`${user?.firstName[0].toUpperCase() || 'N'}${
-                  user?.lastName[0].toUpperCase() || 'A'
-                }`}</Avatar>
+                <Avatar src={userImage} alt={`${user?.firstName} ${user?.lastName}`}>{`${
+                  user?.firstName[0].toUpperCase() || 'N'
+                }${user?.lastName[0].toUpperCase() || 'A'}`}</Avatar>
               </IconButton>
             </Tooltip>
             <Menu

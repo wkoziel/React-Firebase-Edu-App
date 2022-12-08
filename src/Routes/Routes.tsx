@@ -37,7 +37,7 @@ const Routes = () => {
           <Route path={paths.logout} element={<Logout />} />
 
           {/* TEACHER */}
-          {isAuth && userRole === 'teacher' && (
+          {isAuth && (
             <>
               <Route path={paths.teacherDashboard} element={<TeacherDashboard />} />
               <Route path={paths.teacherAddAppointment} element={<TeacherAddAppointment />} />
@@ -47,7 +47,7 @@ const Routes = () => {
           )}
 
           {/* Student */}
-          {isAuth && userRole === 'student' && (
+          {isAuth && (
             <>
               <Route path={paths.studentDashboard} element={<StudentDashboard />} />
               <Route path={paths.studentEditProfile} element={<StudentEditProfile />} />
