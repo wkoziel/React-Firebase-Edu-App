@@ -80,7 +80,7 @@ export const AppointmentProvider: React.FC<{ children: React.ReactNode }> = ({ c
               data: appointments,
             })
               .then(() => {
-                openModal('Udało się!', 'Termin został pomyślnie zarezerowowany.', 'Potiwerdź')
+                openModal('Udało się!', 'Termin został pomyślnie zarezerwowany.', 'Potwierdź')
               })
               .catch((error) => {
                 console.error(error)
