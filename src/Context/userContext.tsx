@@ -77,7 +77,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loadUserPhoto(_userId)
       }
     })
-  }, [navigate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const loadUserPhoto = (userID: string) => {
     const storageRef = ref(storage, `${userID}.jpg`)
