@@ -22,7 +22,7 @@ const Dashboard = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [getAllAppointments])
 
   useEffect(() => {
     loadData()

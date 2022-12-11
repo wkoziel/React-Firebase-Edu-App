@@ -61,7 +61,7 @@ const AddAppointment = (props: Props) => {
   const dates = watch('dates')
   useEffect(() => {
     trigger('dates')
-  }, [dates])
+  }, [dates, trigger])
 
   return (
     <Container sx={{ padding: '2rem', height: '100vh' }}>

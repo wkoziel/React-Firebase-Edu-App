@@ -77,7 +77,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loadUserPhoto(_userId)
       }
     })
-  }, [])
+  }, [navigate])
 
   const loadUserPhoto = (userID: string) => {
     const storageRef = ref(storage, `${userID}.jpg`)
