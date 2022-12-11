@@ -19,23 +19,19 @@ import paths from '../../Routes/paths'
 const pagesTeacher = [
   { name: 'Strona główna', route: paths.teacherDashboard },
   { name: 'Zarządzaj terminami', route: paths.teacherAddAppointment },
+  { name: 'Profil', route: paths.teacherProfile },
+  { name: 'Edytuj profil', route: paths.teacherEditProfile },
 ]
 const pagesStudent = [
   { name: 'Strona główna', route: paths.studentDashboard },
   { name: 'Twoje terminy', route: paths.studentAppointments },
-]
-
-const settingsTeacher = [
-  { name: 'Profil', route: paths.teacherProfile },
-  { name: 'Edytuj profil', route: paths.teacherEditProfile },
-  { name: 'Wyloguj', route: paths.logout },
-]
-
-const settingsStudent = [
   { name: 'Profil', route: paths.studentProfile },
   { name: 'Edytuj profil', route: paths.studentEditProfile },
-  { name: 'Wyloguj', route: paths.logout },
 ]
+
+const settingsTeacher = [{ name: 'Wyloguj', route: paths.logout }]
+
+const settingsStudent = [{ name: 'Wyloguj', route: paths.logout }]
 
 const Navbar = () => {
   const { isAuth, userRole, user, userImage } = useUserContext()

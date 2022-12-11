@@ -25,6 +25,7 @@ interface UserContextInterface {
   logoutUser: () => void
   getMyProfile: () => any
   userImage: string
+  loadUserPhoto: (userId: string) => void
 }
 
 const UserContext = createContext<UserContextInterface | undefined>(undefined)
@@ -73,14 +74,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } else {
           navigate(paths.profileCreation)
         }
-
-        const storageRef = ref(storage, `${_userId}.jpg`)
-        getDownloadURL(storageRef)
-          .then((url) => setUserImage(url))
-          .catch((err) => setUserImage(''))
+        loadUserPhoto(_userId)
       }
     })
   }, [])
+
+  const loadUserPhoto = (userID: string) => {
+    const storageRef = ref(storage, `${userID}.jpg`)
+    getDownloadURL(storageRef)
+      .then((url) => setUserImage(url))
+      .catch((err) => setUserImage(''))
+  }
 
   const signInUser = (userData: UserSignIn) => {
     const { email, password } = userData
@@ -131,7 +135,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           'Potwierdź',
         )
         if (user.role === 'teacher') navigate(paths.teacherDashboard)
-        if (user.role === 'student') navigate(paths.studentDashboard)
+        else if (user.role === 'student') navigate(paths.studentDashboard)
       })
       .catch((error) => {
         openModal('Nie udało się', 'Użytkownik nie został dodany', 'Powrót')
@@ -172,6 +176,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     getMyProfile,
     updateUserProfile,
     userImage,
+    loadUserPhoto,
   }
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>

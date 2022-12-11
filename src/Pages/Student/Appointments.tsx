@@ -130,7 +130,7 @@ const Dashboard = () => {
                           <TableCellStyled>{row.teacherEmail}</TableCellStyled>
                           <TableCellStyled>{row.teacherPhone}</TableCellStyled>
                           <TableCellStyled>{row.teacherAddress}</TableCellStyled>
-                          <TableCellStyled align='right'>
+                          <TableCellStyled align='right' sx={{ minWidth: '120px' }}>
                             <Tooltip title={'Napisz wiadomość'}>
                               <IconButton href={`mailto:${row.teacherEmail}`} target='_top' rel='noopener noreferrer'>
                                 {<EmailIcon />}
@@ -138,7 +138,10 @@ const Dashboard = () => {
                             </Tooltip>
 
                             <Tooltip title={'Zrezygnuj z terminu'}>
-                              <IconButton onClick={() => handleDeleteOnClick(row.dateId, row.appointmentId)}>
+                              <IconButton
+                                onClick={() => handleDeleteOnClick(row.dateId, row.appointmentId)}
+                                disabled={new Date(row.date) < new Date()}
+                              >
                                 {<DeleteIcon />}
                               </IconButton>
                             </Tooltip>

@@ -75,7 +75,7 @@ const ProfileComponent = ({ user, userImage = '' }: Props) => {
   const [image, setImage] = useState<any>(null)
   const [displayImage, setDisplayImage] = useState<any>(null)
   const [progress, setProgress] = useState(0)
-  const { userID, userRole } = useUserContext()
+  const { userID, userRole, loadUserPhoto } = useUserContext()
   const hiddenFileInput = React.useRef(null)
   const navigate = useNavigate()
 
@@ -92,6 +92,10 @@ const ProfileComponent = ({ user, userImage = '' }: Props) => {
       (snapshot) => {
         const p = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         setProgress(p)
+        if (p === 100) {
+          setProgress(0)
+          loadUserPhoto(userID)
+        }
       },
       (error) => console.log(error),
     )

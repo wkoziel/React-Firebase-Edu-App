@@ -10,6 +10,7 @@ import paths from '../../Routes/paths'
 import { Appointment } from '../../Types/Apointments'
 import { useAppointmentContext } from '../../Context/appointmentContext'
 import { useUserContext } from '../../Context/userContext'
+import { isValid } from 'date-fns'
 
 type Props = {}
 
@@ -22,7 +23,7 @@ const AddAppointment = (props: Props) => {
     mode: 'onChange',
     defaultValues: { bio: '', price: 0, dates: [{ date: new Date(), id: uuid() }] },
   })
-  const { handleSubmit, control, formState, setValue, reset } = methods
+  const { handleSubmit, control, formState, setValue, reset, watch, trigger } = methods
 
   useEffect(() => {
     if (userID)
@@ -57,6 +58,10 @@ const AddAppointment = (props: Props) => {
   const onSubmit = async (data: Appointment) => {
     addAppointments(data)
   }
+  const dates = watch('dates')
+  useEffect(() => {
+    trigger('dates')
+  }, [dates])
 
   return (
     <Container sx={{ padding: '2rem', height: '100vh' }}>
@@ -95,13 +100,16 @@ const AddAppointment = (props: Props) => {
                 control={control}
                 name='bio'
                 defaultValue=''
-                rules={{ required: 'To pole jest wymagane' }}
+                rules={{
+                  required: 'To pole jest wymagane',
+                  maxLength: { value: 300, message: 'Pole nie może zawierać więcej niż 300 znaków' },
+                }}
                 render={({ field, fieldState: { error } }) => (
                   <TextField
                     {...field}
                     label='Opis korepetycji'
                     multiline
-                    rows={6}
+                    rows={4}
                     error={!!error}
                     helperText={error?.message}
                   />
@@ -128,7 +136,16 @@ const AddAppointment = (props: Props) => {
                 <Controller
                   control={control}
                   name={`dates.${index}.date`}
-                  rules={{ required: 'To pole jest wymagane' }}
+                  rules={{
+                    required: 'To pole jest wymagane',
+                    validate: {
+                      validDate: (value) => isValid(value) || 'Niepoprawna data',
+                      duplicates: (value) =>
+                        //@ts-ignore
+                        dates.filter((d) => d.date.toString() === value.toString()).length === 1 ||
+                        'Data jest zduplikowana',
+                    },
+                  }}
                   render={({ field, fieldState: { error } }) => (
                     <DateTimePicker
                       {...field}
@@ -161,7 +178,11 @@ const AddAppointment = (props: Props) => {
               </Grid>
             ))}
 
-            <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: '2rem' }}>
+            <Grid
+              item
+              xs={12}
+              sx={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', paddingBottom: '50px' }}
+            >
               <Button
                 onClick={() => navigate(paths.teacherDashboard)}
                 variant='text'

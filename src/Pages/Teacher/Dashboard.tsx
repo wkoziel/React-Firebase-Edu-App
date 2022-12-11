@@ -97,7 +97,7 @@ const Dashboard = () => {
                 Tutaj możesz podejrzeć wszystkie swoje terminy i zobaczyć przypisane do nich osoby
               </Typography>
             </Grid>
-            <Grid xs={12} sx={{ height: '85%' }}>
+            <Grid item xs={12} sx={{ height: '85%' }}>
               <TableContainer component={Paper} sx={{ borderRadius: 5 }}>
                 <Table sx={{ minWidth: 650 }} size='small' aria-label='a dense table'>
                   <TableHead>

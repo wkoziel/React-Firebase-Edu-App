@@ -73,7 +73,7 @@ const TeacherCard = ({ appointment, reloadData }: Props) => {
                 key={index}
                 component={'button'}
                 onClick={() => onDateTaleClick(date.id)}
-                disabled={!!date.assignedStudent}
+                disabled={!!date.assignedStudent || date.date < new Date()}
                 sx={{
                   width: '49%',
                   opacity: 0.9,

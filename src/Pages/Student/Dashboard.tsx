@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { Container, Box, Grid, TextField, InputAdornment, Typography } from '@mui/material'
+import { Container, Box, Grid, Typography } from '@mui/material'
 import { useAppointmentContext } from '../../Context/appointmentContext'
 import { Appointment } from '../../Types/Apointments'
 import TeacherCard from '../../Components/TeacherCard/TeacherCard'
 import { subjectOptions } from '../../Consts/selectOptions'
-import SearchIcon from '@mui/icons-material/Search'
 import Select from '../../Components/Select/Select'
 
 const Dashboard = () => {
