@@ -10,10 +10,12 @@ import FullScreenContainer from '../Layouts/FullScreenContainer'
 import paths from '../Routes/paths'
 import { UserRegister } from '../Types/Users'
 import Alert from '../Components/Alert/Alert'
+import { useNavigate } from 'react-router-dom'
 
 const Register = () => {
   const { createUser, authMessage } = useUserContext()
   const { author, quote } = registerQuote
+  const navigate = useNavigate()
 
   const { handleSubmit, control, setError } = useForm<UserRegister>({
     mode: 'onSubmit',
@@ -91,9 +93,9 @@ const Register = () => {
           <Button variant='contained' type='submit'>
             Zarejestruj
           </Button>
-          <Link sx={{ textAlign: 'center' }} href={paths.login} variant='body2'>
+          <Button sx={{ textAlign: 'center' }} onClick={() => navigate(paths.login)} variant='text'>
             Masz już konto? Zaloguj się!
-          </Link>
+          </Button>
         </FormContainer>
       </CenterContainer>
     </FullScreenContainer>

@@ -47,12 +47,6 @@ const Navbar = () => {
     setAnchorElUser(null)
   }
 
-  const getLogoUrl = () => {
-    if (userRole === 'teacher') return paths.teacherDashboard
-    if (userRole === 'student') return paths.studentDashboard
-    return paths.login
-  }
-
   if (
     !isAuth ||
     location.pathname === paths.login ||
@@ -71,8 +65,6 @@ const Navbar = () => {
           <Typography
             variant='h6'
             noWrap
-            component='a'
-            href={getLogoUrl()}
             sx={{
               mr: 2,
               display: 'flex',

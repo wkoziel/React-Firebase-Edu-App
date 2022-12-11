@@ -11,10 +11,12 @@ import { Controller, useForm } from 'react-hook-form'
 import { UserSignIn } from '../Types/Users'
 import { useUserContext } from '../Context/userContext'
 import Alert from '../Components/Alert/Alert'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const { signInUser, authMessage } = useUserContext()
   const { author, quote } = loginQuote
+  const navigate = useNavigate()
 
   const { handleSubmit, control } = useForm<UserSignIn>({ mode: 'onSubmit' })
 
@@ -62,9 +64,9 @@ const Login = () => {
           <Button variant='contained' type='submit'>
             Zaloguj
           </Button>
-          <Link sx={{ textAlign: 'center' }} href={paths.register} variant='body2'>
+          <Button sx={{ textAlign: 'center' }} onClick={() => navigate(paths.register)} variant='text'>
             Nie masz konta? Zarejestruj się!
-          </Link>
+          </Button>
         </FormContainer>
       </CenterContainer>
     </FullScreenContainer>
