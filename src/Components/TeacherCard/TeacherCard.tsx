@@ -68,35 +68,38 @@ const TeacherCard = ({ appointment, reloadData }: Props) => {
           sx={{ display: 'flex', flexDirection: 'column', gap: '5px', borderRadius: '12px', padding: '10px' }}
         >
           <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-            {formattedDates.map((date, index) => (
-              <Box
-                key={index}
-                component={'button'}
-                onClick={() => onDateTaleClick(date.id)}
-                disabled={!!date.assignedStudent || date.date < new Date()}
-                sx={{
-                  width: '49%',
-                  opacity: 0.9,
-                  bgcolor: 'primary.light',
-                  padding: '8px',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  border: 'none',
-                  '&:hover': {
-                    bgcolor: 'primary.main',
-                    transition: '.3s ease',
-                  },
-                  '&:disable': {
-                    bgcolor: 'primary.lighter',
-                    opacity: 0.8,
-                  },
-                }}
-              >
-                <Typography variant='body1' fontWeight={'600'} textAlign='center'>
-                  {format(date.date, 'dd/MM/yyyy (EEEE) - HH:mm', { locale: pl })}
-                </Typography>
-              </Box>
-            ))}
+            {formattedDates.map(
+              (date, index) =>
+                date.date > new Date() && (
+                  <Box
+                    key={index}
+                    component={'button'}
+                    onClick={() => onDateTaleClick(date.id)}
+                    disabled={!!date.assignedStudent}
+                    sx={{
+                      width: '49%',
+                      opacity: 0.9,
+                      bgcolor: 'primary.light',
+                      padding: '8px',
+                      borderRadius: '5px',
+                      cursor: 'pointer',
+                      border: 'none',
+                      '&:hover': {
+                        bgcolor: 'primary.main',
+                        transition: '.3s ease',
+                      },
+                      '&:disable': {
+                        bgcolor: 'primary.lighter',
+                        opacity: 0.8,
+                      },
+                    }}
+                  >
+                    <Typography variant='body1' fontWeight={'600'} textAlign='center'>
+                      {format(date.date, 'dd/MM/yyyy (EEEE) - HH:mm', { locale: pl })}
+                    </Typography>
+                  </Box>
+                ),
+            )}
           </Box>
         </Grid>
       </Grid>
