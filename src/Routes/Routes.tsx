@@ -23,7 +23,7 @@ const StudentProfile = lazy(() => import('../Pages/Student/Profile'))
 const StudentAppointments = lazy(() => import('../Pages/Student/Appointments'))
 
 const Routes = () => {
-  const { isAuth, userRole } = useUserContext()
+  const { isAuth } = useUserContext()
   return (
     <>
       <Suspense fallback={<div />}>
