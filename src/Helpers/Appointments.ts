@@ -9,7 +9,7 @@ export const mapDatesForTableTeacher = (dates: AppointmentDate[]) => {
       date: format(date.date.toDate(), 'dd/MM/yyyy (EEEE) - HH:mm', {
         locale: pl,
       }),
-      studentName: date.assignedStudent ? `${date.assignedStudent?.firstName} ${date.assignedStudent?.firstName}` : '-',
+      studentName: date.assignedStudent ? `${date.assignedStudent?.firstName} ${date.assignedStudent?.lastName}` : '-',
       studentEmail: date.assignedStudent?.email || '-',
       studentPhone: date.assignedStudent?.phone || '-',
     }
@@ -24,7 +24,7 @@ export const mapDatesForTableStudent = (dates: StudentDate[]) => {
       date: format(date.date.toDate(), 'dd/MM/yyyy (EEEE) - HH:mm', {
         locale: pl,
       }),
-      teacherName: date.teacher ? `${date.teacher?.firstName} ${date.teacher?.firstName}` : '-',
+      teacherName: date.teacher ? `${date.teacher?.firstName} ${date.teacher?.lastName}` : '-',
       teacherEmail: date.teacher?.email || '-',
       teacherPhone: date.teacher?.phone || '-',
       teacherAddress: date.teacher?.phone || '-',
