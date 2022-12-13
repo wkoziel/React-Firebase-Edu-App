@@ -131,11 +131,15 @@ const Dashboard = () => {
                             {row.studentEmail === '-' && (
                               <>
                                 <Tooltip title={'Edytuj termin'}>
-                                  <IconButton>{<EditIcon />}</IconButton>
+                                  <IconButton onClick={() => navigate(paths.teacherAddAppointment)}>
+                                    {<EditIcon />}
+                                  </IconButton>
                                 </Tooltip>
 
                                 <Tooltip title={'Usuń termin'}>
-                                  <IconButton>{<DeleteIcon />}</IconButton>
+                                  <IconButton onClick={() => navigate(paths.teacherAddAppointment)}>
+                                    {<DeleteIcon />}
+                                  </IconButton>
                                 </Tooltip>
                               </>
                             )}

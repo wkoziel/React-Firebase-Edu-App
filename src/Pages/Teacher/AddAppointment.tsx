@@ -153,6 +153,7 @@ const AddAppointment = (props: Props) => {
                       disablePast
                       ampm={false}
                       minutesStep={15}
+                      readOnly={!!item.assignedStudent}
                       renderInput={(params) => (
                         <TextField
                           {...params}
